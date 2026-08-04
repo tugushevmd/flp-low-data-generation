@@ -1,0 +1,39 @@
+{
+  "corpus_size": 150000,
+  "doses": {
+    "P0": 0,
+    "P0.1": 150,
+    "P1": 1500,
+    "P5": 7500
+  },
+  "main_group_targets": {
+    "B": 3000,
+    "P": 3000,
+    "Si": 750,
+    "Al": 375,
+    "Ge": 375
+  },
+  "seed": 2026,
+  "max_tokens": 202,
+  "max_snn_to_curated_flp": 0.4,
+  "zinc_source": "aspuru-guzik-group/chemical_vae",
+  "pubchem_source": "PubChem PUG-REST",
+  "zinc_sha256": "35e3f1a52b1badc0697e373d73a18ad773f415936ff992f4c6baa2e067b3e6ae",
+  "pubchem_sha256": "f2829f96f021d7ea26683e7154e01cb805ca1f467016090277173a0f23a6ba52",
+  "curated_reference_sha256": "b8e119331fd38438a07b42370966949d25cd4134b7e8f0b3b28fba8b81efcaec",
+  "template_reference_sha256": "767ae4efddca750c28dfd093e309efbb753a271b4ce784e84907e9fd44c4e709",
+  "corpus_sha256": {
+    "P0": "618461c90696ce897ad5ed99850d9c939591d0c0932fda3f8562712dd4a53484",
+    "P0.1": "481189dfc9812bd4d0113e8c0d77c995049b7268cf31014c15d4c8e39f73cf2b",
+    "P1": "7a959b7f51be2fef3a7c580df0600b995372acb007275737c868739fa70db16a",
+    "P5": "925d7f421d92ade70a7e5cd4b2f833ea98ba2a156b7f7c1a9b922e048b7faeda"
+  },
+  "general_validation_sha256": "b4c08a3367337d980da8cb51024acb0daa734a25c38b763b8ef7932dff07542c",
+  "main_group_validation_sha256": "f899f5f070925b6b543b9434996602bb69088d057d0bec7c7f9b04234f58f37e",
+  "flp_validation_sha256": "2d1ac5da4ae4c512c4833c628d4e59803a5aa822cbe24a00dc95c89ef0686975",
+  "maximum_absolute_smd": {
+    "P0.1": 0.06484167301748145,
+    "P1": 0.10243134593662075,
+    "P5": 0.11204163515280065
+  }
+}

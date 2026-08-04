@@ -1,0 +1,2 @@
+accepted,rejected,reviewed,acceptance_fraction,ci95_low,ci95_high,evaluator_version
+68,4,72,0.9444444444444444,0.865677916427906,0.9781861370730749,2.1.1

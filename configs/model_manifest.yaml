@@ -1,0 +1,45 @@
+project: low-data-flp-generation
+version: 0.1.0
+evaluator_version: 2.1.1
+
+target_data:
+  curated_reference: data/flp_curation/reference_smiles_curated_v2.csv
+  train: data/flp_curation/train_smiles.csv
+  validation: data/flp_curation/validation_smiles.csv
+  reference_molecules: 299
+  train_molecules: 166
+  validation_molecules: 20
+
+controlled_priors:
+  architecture: two-layer GRU
+  embedding_size: 128
+  hidden_size: 256
+  tokenizer: ibm-research/MoLFormer-XL-both-10pct
+  tokenizer_revision: abb341ed7cee8c7783088d70bf9f86dff266844e
+  corpus_size: 150000
+  doses:
+    P0: 0.0
+    P0.1: 0.001
+    P1: 0.01
+    P5: 0.05
+  training_seeds: [11, 22, 33]
+  confirmatory_seeds: [44, 55, 66]
+  generation_seeds: [101, 202, 303]
+  learning_curve_molecules: [42, 83, 166]
+
+external_models:
+  GP-MoLFormer:
+    checkpoint: ibm-research/GP-MoLFormer-Uniq
+    sampling: {temperature: 1.3, top_p: 1.0}
+  MolGPT:
+    checkpoint: jonghyunlee/MolGPT_long_context_pretrained-by-ZINC15
+  REINVENT:
+    checkpoint: reinvent_pubchem.prior
+
+manual_validation:
+  sample_size: 72
+  accepted: 68
+  rejected: 4
+  stratification: 12 per model and training fraction
+  decision_file: results/manual_validation/review_results.csv
+

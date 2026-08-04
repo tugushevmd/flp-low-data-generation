@@ -1,0 +1,8 @@
+-r requirements.txt
+transformers>=4.48
+accelerate>=1.2
+safetensors>=0.4
+huggingface_hub>=0.27
+
+# Install PyTorch separately for the CUDA version available on the machine.
+

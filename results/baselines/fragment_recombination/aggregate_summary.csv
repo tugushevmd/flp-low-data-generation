@@ -1,0 +1,12 @@
+metric,mean,sd
+validity,1.0,0.0
+unique_valid_yield,1.0,0.0
+chemically_sane_fraction,1.0,0.0
+strict_flp_yield,1.0,0.0
+novel_flp_yield,0.0,0.0
+final_candidate_yield,0.0,0.0
+fragment_candidate_yield,0.503,0.0069282032302755165
+near_duplicate_095,0.0030000000000000005,5.311484201212962e-19
+mean_snn_to_train,0.4193423688097519,0.0023297871903049123
+internal_diversity,0.6939745738383417,0.0009249558173805991
+scaffold_novelty_vs_train,0.654,0.013453624047073722

@@ -1,0 +1,9 @@
+stage,n,fraction_of_raw
+raw,1000,1.0
+valid,1000,1.0
+unique valid,1000,1.0
+chemically sane,1000,1.0
+neutral,1000,1.0
+strict FLP-like,1000,1.0
+novel FLP-like,0,0.0
+final candidates,0,0.0

@@ -1,0 +1,23 @@
+name: flp-low-data-generation
+channels:
+  - pytorch
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - pytorch
+  - numpy
+  - pandas
+  - scipy
+  - matplotlib
+  - rdkit
+  - pyyaml
+  - jupyterlab
+  - pip:
+      - tokenizers>=0.20
+      - transformers>=4.48
+      - accelerate>=1.2
+      - safetensors>=0.4
+      - huggingface_hub>=0.27
+      - tqdm>=4.66
+

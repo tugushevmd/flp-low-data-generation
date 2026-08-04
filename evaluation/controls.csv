@@ -1,0 +1,21 @@
+id,smiles,expected_valid,expected_has_LA,expected_has_LB,expected_strict,comment
+P_FLP,B(c1ccccc1)(c1ccccc1)c1ccccc1P(C)C,1,1,1,1,neutral B/P FLP-like control
+N_FLP,B(c1ccccc1)(c1ccccc1)c1ccccc1N(C)C,1,1,1,1,neutral B/N FLP-like control
+LA_only,B(c1ccccc1)(c1ccccc1)c1ccccc1,1,1,0,0,triphenylborane
+LB_only,P(c1ccccc1)(c1ccccc1)c1ccccc1,1,0,1,0,triphenylphosphine
+direct_BP,B(C)(C)P(C)C,1,1,1,0,direct B-P bond
+direct_BN,B(C)(C)N(C)C,1,1,1,0,direct B-N bond
+borate,[B-](C)(C)(C)CCP(C)C,1,0,1,0,anionic tetracoordinate boron is not LA
+phosphine_oxide,B(c1ccccc1)(c1ccccc1)c1ccccc1P(=O)(C)C,1,1,0,0,P=O is not phosphine
+phosphine_sulfide,B(c1ccccc1)(c1ccccc1)c1ccccc1P(=S)(C)C,1,1,0,0,P=S is not phosphine
+amide_N,B(c1ccccc1)(c1ccccc1)c1ccccc1NC=O,1,1,0,0,amide nitrogen is not counted as LB
+pyrrolic_N,B(c1ccccc1)(c1ccccc1)c1ccccc1-c1cc[nH]c1,1,1,0,0,pyrrolic nitrogen is not counted as LB
+pyridine_N,B(c1ccccc1)(c1ccccc1)c1ccccc1-c1ccccn1,1,1,1,1,pyridine nitrogen is counted as LB
+nitro_N,B(c1ccccc1)(c1ccccc1)c1ccc([N+](=O)[O-])cc1,1,1,0,0,nitro nitrogen is not counted as LB
+quaternary_N,B(c1ccccc1)(c1ccccc1)c1ccc([N+](C)(C)C)cc1,1,1,0,0,quaternary nitrogen is not counted as LB
+drug_like,CC(=O)NC1=CC=CC=C1,1,0,0,0,drug-like molecule without LA or LB
+multi_component,B(C)(C)C.P(C)(C)C,1,1,1,0,multiple components are outside strict class
+radical,[CH3],1,0,0,0,radical is outside chemical sanity
+bad_valence,C(C)(C)(C)(C)C,0,0,0,0,carbon valence violation
+unbalanced_branch,CC(C,0,0,0,0,unbalanced parentheses
+unmatched_ring,C1CC,0,0,0,0,unmatched ring closure

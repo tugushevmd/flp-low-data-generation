@@ -1,0 +1,30 @@
+{
+  "evaluator_version": "2.1.1",
+  "figures": [
+    "figure_1_prior_compatibility.pdf",
+    "figure_1_prior_compatibility.png",
+    "figure_2_controlled_prior_learning_curves.pdf",
+    "figure_2_controlled_prior_learning_curves.png",
+    "figure_3_confirmatory_paired_effects.pdf",
+    "figure_3_confirmatory_paired_effects.png",
+    "figure_4_external_generators.pdf",
+    "figure_4_external_generators.png",
+    "figure_5_manual_chemical_validation.pdf",
+    "figure_5_manual_chemical_validation.png",
+    "figure_6_representative_candidates.png",
+    "figure_6_representative_candidates.svg"
+  ],
+  "tables": [
+    "representative_candidates_v211.csv",
+    "table_1_prior_compatibility_v211.csv",
+    "table_2_learning_curves_v211.csv",
+    "table_3_confirmatory_effects_v211.csv",
+    "table_4_external_generators_v211.csv",
+    "table_5_manual_validation_v211.csv"
+  ],
+  "manual_validation": {
+    "accepted": 68,
+    "reviewed": 72,
+    "fraction": 0.9444444444444444
+  }
+}

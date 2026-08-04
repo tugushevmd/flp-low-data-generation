@@ -1,0 +1,20 @@
+{
+  "selection": "nested scaffold-balanced order",
+  "selection_seed": 2026,
+  "full_train_molecules": 166,
+  "validation_molecules": 20,
+  "subsets": {
+    "25": {
+      "molecules": 42,
+      "unique_scaffolds": 42
+    },
+    "50": {
+      "molecules": 83,
+      "unique_scaffolds": 70
+    },
+    "100": {
+      "molecules": 166,
+      "unique_scaffolds": 70
+    }
+  }
+}

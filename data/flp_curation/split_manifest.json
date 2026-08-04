@@ -1,0 +1,13 @@
+{
+  "curation_version": "v2",
+  "split_strategy": "old validation preserved; discarded structures removed from train",
+  "train_molecules": 166,
+  "validation_molecules": 20,
+  "reference_molecules": 299,
+  "removed_from_old_train": 9,
+  "files": {
+    "train_smiles.csv": "18bf70df369bd4968424eb6a1312283d11fb58832e3ecd1d0cbb260f1dfbec80",
+    "validation_smiles.csv": "72f1f8dc0c2574e453e3b0bb4d695f1d44391fce53f52ffd78cfeda85c782c01",
+    "reference_smiles.csv": "2d21183c1c6a38d945bdebdc5ccb5ad9096b1eeaf0615deba04e2d1654933a36"
+  }
+}

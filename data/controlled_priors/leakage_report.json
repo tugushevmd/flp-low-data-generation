@@ -1,0 +1,12 @@
+{
+  "selected_main_group_molecules": 7500,
+  "selected_flp_like_molecules": 0,
+  "exact_matches_to_curated": 0,
+  "exact_matches_to_templates": 0,
+  "max_snn_to_curated": 0.39622641509433965,
+  "mean_snn_to_curated": 0.18127501282936806,
+  "curated_scaffold_overlap_fraction": 0.22906666666666667,
+  "main_group_validation_molecules": 1000,
+  "general_validation_molecules": 2000,
+  "flp_validation_molecules": 20
+}
