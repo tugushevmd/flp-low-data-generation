@@ -113,7 +113,7 @@ def canonicalize(smiles, isomeric=False):
 
 
 def chemical_sanity(smiles):
-    if smiles is None:
+    if pd.isna(smiles):
         return {
             "chemically_sane": False,
             "sanity_reasons": ["invalid_smiles"],
@@ -217,7 +217,7 @@ def classify_flp(smiles):
         "flp_tier": "invalid",
         "min_LA_LB_bonds": np.nan,
     }
-    if smiles is None:
+    if pd.isna(smiles):
         return empty_result
 
     mol = Chem.MolFromSmiles(smiles)

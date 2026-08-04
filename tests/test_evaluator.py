@@ -122,6 +122,18 @@ class EvaluatorTests(unittest.TestCase):
 
         self.assertFalse(rows.iloc[0]["chemically_sane"])
 
+    def test_invalid_smiles_does_not_stop_evaluation(self):
+        rows, summary, _ = audit_generation(
+            raw_smiles=["C(C", "c1ccccc1"],
+            train_smiles=["c1ccccc1"],
+            seed_smiles=["c1ccccc1"],
+            template_smiles=[],
+        )
+
+        self.assertFalse(rows.iloc[0]["is_valid"])
+        self.assertFalse(rows.iloc[0]["chemically_sane"])
+        self.assertEqual(summary.iloc[0]["raw_n"], 2)
+
 
 if __name__ == "__main__":
     unittest.main()

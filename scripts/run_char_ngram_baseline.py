@@ -134,10 +134,10 @@ def main():
     aggregate.to_csv(RESULT_DIR / "aggregate_summary.csv", index=False)
 
     plot_metrics = [
-        ("validity", "Валидность"),
-        ("unique_valid_yield", "Уникальные валидные"),
-        ("strict_flp_yield", "Строгие FLP-like"),
-        ("final_candidate_yield", "Финальные кандидаты"),
+        ("validity", "Valid"),
+        ("unique_valid_yield", "Unique valid"),
+        ("strict_flp_yield", "Strict FLP-like"),
+        ("final_candidate_yield", "Final candidates"),
     ]
     means = [run_summary[column].mean() for column, _ in plot_metrics]
     errors = [run_summary[column].std() for column, _ in plot_metrics]
@@ -150,8 +150,8 @@ def main():
         color=["#356859", "#7B6D8D", "#8C3B4A", "#6B7280"],
         capsize=4,
     )
-    ax.set_ylabel("Доля от всех генераций")
-    ax.set_title("Символьная 5-граммная модель")
+    ax.set_ylabel("Fraction of all generations")
+    ax.set_title("Character 5-gram model")
     ax.set_ylim(0, max(0.1, max(means) + max(errors) + 0.02))
     ax.grid(axis="y", alpha=0.2)
     fig.tight_layout()

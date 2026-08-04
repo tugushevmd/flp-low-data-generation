@@ -148,7 +148,7 @@ with ZipFile(archive_path) as archive:
 
 if len(run_rows) != 108:
     raise ValueError(
-        f"Найдено {len(run_rows)} запусков вместо 108"
+        f"Found {len(run_rows)} runs; expected 108"
     )
 
 run_table = pd.DataFrame(run_rows)
@@ -267,9 +267,9 @@ colors = {
     "scratch": "#356859",
 }
 panels = [
-    ("unique_valid_yield", "Выход уникальных валидных"),
-    ("strict_flp_yield", "Выход strict FLP-like"),
-    ("final_candidate_yield", "Выход финальных кандидатов"),
+    ("unique_valid_yield", "Unique-valid yield"),
+    ("strict_flp_yield", "Strict FLP-like yield"),
+    ("final_candidate_yield", "Final-candidate yield"),
 ]
 
 fig, axes = plt.subplots(2, 2, figsize=(10.5, 8))
@@ -289,7 +289,7 @@ for (metric, title), ax in zip(panels, axes.flat[:3]):
             label=family,
         )
     ax.set_title(title)
-    ax.set_xlabel("Доля FLP train, %")
+    ax.set_xlabel("FLP training fraction, %")
     ax.set_xticks([25, 50, 100])
 
 ax = axes.flat[3]
@@ -307,8 +307,8 @@ for family in colors:
         color=colors[family],
         label=family,
     )
-ax.set_title("BPC на validation")
-ax.set_xlabel("Доля FLP train, %")
+ax.set_title("Validation BPC")
+ax.set_xlabel("FLP training fraction, %")
 ax.set_xticks([25, 50, 100])
 
 for ax in axes.flat:
@@ -335,4 +335,4 @@ print(
         "final_candidate_yield_mean",
     ]].round(4).to_string(index=False)
 )
-print("Уникальных финальных кандидатов:", len(candidate_union))
+print("Unique final candidates:", len(candidate_union))

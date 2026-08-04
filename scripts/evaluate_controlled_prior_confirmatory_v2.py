@@ -125,7 +125,7 @@ with ZipFile(ARCHIVE) as archive:
         )
 
 if len(run_rows) != 36:
-    raise ValueError(f"Найдено {len(run_rows)} запусков вместо 36")
+    raise ValueError(f"Found {len(run_rows)} runs; expected 36")
 
 run_table = pd.DataFrame(run_rows)
 run_table.to_csv(OUT_DIR / "run_summary_v2.csv", index=False)
@@ -263,7 +263,7 @@ panels = [
     ("validity_delta", "Δ validity"),
     ("strict_flp_yield_delta", "Δ strict FLP-like"),
     ("final_candidate_yield_delta", "Δ final candidates"),
-    ("validation_bpc_improvement", "Улучшение validation BPC"),
+    ("validation_bpc_improvement", "Validation BPC improvement"),
 ]
 
 fig, axes = plt.subplots(2, 2, figsize=(10, 7.5))
@@ -286,7 +286,7 @@ for ax, (column, title) in zip(axes.flat, panels):
     ax.grid(alpha=0.2)
 
 axes.flat[0].legend(frameon=False)
-fig.suptitle("P5 относительно P0: шесть независимых повторов", fontsize=14)
+fig.suptitle("P5 versus P0: six independent training runs", fontsize=14)
 fig.tight_layout()
 fig.savefig(OUT_DIR / "confirmatory_paired_results.png", dpi=220)
 
@@ -303,4 +303,4 @@ print(
 )
 print()
 print(tests.round(4).to_string(index=False))
-print("Уникальных новых финальных кандидатов:", len(candidate_union))
+print("Unique novel final candidates:", len(candidate_union))

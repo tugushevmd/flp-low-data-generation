@@ -80,7 +80,7 @@ def mean_and_sd(table, groups, metric):
     return table.groupby(groups)[metric].agg(["mean", "std"]).reset_index()
 
 
-# 1. Совместимость исходных prior с FLP-доменом
+# 1. Prior compatibility with the FLP domain
 prior_seeds = pd.read_csv(DATA / "controlled_priors" / "training_seed_summary_v2.csv")
 prior_bpc = pd.read_csv(DATA / "controlled_priors" / "frozen_bpc_runs.csv")
 prior_order = ["P0", "P0.1", "P1", "P5"]
@@ -98,12 +98,12 @@ for x, prior in zip(x_prior, prior_order):
     values = prior_bpc.loc[prior_bpc["prior"] == prior, "flp_gap"]
     axes[0].scatter(np.full(len(values), x), values, s=34,
                     color=PRIOR_COLORS[prior], edgecolor="white", linewidth=0.6, zorder=4)
-axes[0].set_title("Разрыв BPC для FLP")
+axes[0].set_title("FLP BPC gap")
 axes[0].set_ylabel("FLP BPC - general BPC")
 
 metrics = [
-    ("main_group_fraction_unique_valid", "Main-group атомы", 1),
-    ("strict_flp_yield", "Строгие FLP-like", 2),
+    ("main_group_fraction_unique_valid", "Main-group atoms", 1),
+    ("strict_flp_yield", "Strict FLP-like", 2),
 ]
 for metric, title, axis_number in metrics:
     ax = axes[axis_number]
@@ -117,7 +117,7 @@ for metric, title, axis_number in metrics:
         ax.scatter(np.full(len(values), x), values, s=34,
                    color=PRIOR_COLORS[prior], edgecolor="white", linewidth=0.6, zorder=4)
     ax.set_title(title)
-    ax.set_ylabel("Доля от валидных" if axis_number == 1 else "Доля от генераций")
+    ax.set_ylabel("Fraction of valid molecules" if axis_number == 1 else "Fraction of generations")
     finish_axis(ax, percent=True)
 
 for letter, ax in zip("ABC", axes):
@@ -127,13 +127,13 @@ for letter, ax in zip("ABC", axes):
     panel_letter(ax, letter)
 axes[2].yaxis.set_major_formatter(PercentFormatter(1, decimals=2))
 
-fig.suptitle("Химически близкий prior постепенно приближает модель к FLP-домену",
+fig.suptitle("Main-group content improves prior compatibility with the FLP domain",
              fontsize=14, fontweight="semibold", y=1.04)
 fig.tight_layout()
 save_figure(fig, "figure_1_prior_compatibility")
 
 
-# 2. Learning curves для controlled priors
+# 2. Controlled-prior learning curves
 curve_seeds = pd.read_csv(DATA / "controlled_prior_learning_curves" / "training_seed_summary_v2.csv")
 curve_bpc = pd.read_csv(DATA / "controlled_prior_learning_curves" / "best_runs.csv")
 fractions = [25, 50, 100]
@@ -141,9 +141,9 @@ molecules = {25: 42, 50: 83, 100: 166}
 families = ["scratch", "P0", "P1", "P5"]
 
 panels = [
-    ("validity", "Валидность", True),
-    ("strict_flp_yield", "Строгие FLP-like", True),
-    ("final_candidate_yield", "Финальные кандидаты", True),
+    ("validity", "Validity", True),
+    ("strict_flp_yield", "Strict FLP-like yield", True),
+    ("final_candidate_yield", "Final-candidate yield", True),
     ("best_validation_bpc", "Validation BPC", False),
 ]
 
@@ -162,27 +162,27 @@ for ax, (metric, title, percent), letter in zip(axes.flat, panels, "ABCD"):
                 linewidth=2.2, label=family)
     ax.set_title(title)
     ax.set_xticks([42, 83, 166], ["42\n(25%)", "83\n(50%)", "166\n(100%)"])
-    ax.set_xlabel("Число FLP-молекул")
+    ax.set_xlabel("Number of FLP training molecules")
     finish_axis(ax, percent=percent)
     panel_letter(ax, letter)
 
 handles, labels = axes[0, 0].get_legend_handles_labels()
 fig.legend(handles, labels, loc="upper center", ncol=4, bbox_to_anchor=(0.5, 1.01))
-fig.suptitle("Learning curves: влияние prior и размера FLP-выборки",
+fig.suptitle("Learning curves by prior and FLP training-set size",
              fontsize=14, fontweight="semibold", y=1.07)
 fig.tight_layout()
 save_figure(fig, "figure_2_controlled_prior_learning_curves")
 
 
-# 3. Подтверждающий парный эксперимент P5 против P0
+# 3. Confirmatory paired experiment: P5 versus P0
 deltas = pd.read_csv(DATA / "controlled_prior_confirmatory" / "paired_deltas_p5_vs_p0.csv")
 sign_tests = pd.read_csv(DATA / "controlled_prior_confirmatory" / "paired_sign_tests.csv")
 
 delta_panels = [
-    ("validity_delta", "Валидность", "validity"),
-    ("strict_flp_yield_delta", "Строгие FLP-like", "strict_flp_yield"),
-    ("final_candidate_yield_delta", "Финальные кандидаты", "final_candidate_yield"),
-    ("validation_bpc_improvement", "Улучшение validation BPC", "validation_bpc"),
+    ("validity_delta", "Validity", "validity"),
+    ("strict_flp_yield_delta", "Strict FLP-like yield", "strict_flp_yield"),
+    ("final_candidate_yield_delta", "Final-candidate yield", "final_candidate_yield"),
+    ("validation_bpc_improvement", "Validation BPC improvement", "validation_bpc"),
 ]
 
 fig, axes = plt.subplots(2, 2, figsize=(10.4, 7.2))
@@ -201,7 +201,7 @@ for ax, (column, title, test_name), letter in zip(axes.flat, delta_panels, "ABCD
                 color=COLORS["graphite"])
     ax.axhline(0, color=COLORS["graphite"], linewidth=1, linestyle="--")
     ax.set_title(title)
-    ax.set_xticks([0, 1], ["83 молекулы\n(50%)", "166 молекул\n(100%)"])
+    ax.set_xticks([0, 1], ["83 molecules\n(50%)", "166 molecules\n(100%)"])
     ax.set_ylabel("P5 - P0")
     finish_axis(ax, percent=column != "validation_bpc_improvement")
     panel_letter(ax, letter)
@@ -209,15 +209,15 @@ for ax, (column, title, test_name), letter in zip(axes.flat, delta_panels, "ABCD
 fig.legend([
     plt.Line2D([], [], marker="o", linestyle="", color=COLORS["violet"], markersize=6),
     plt.Line2D([], [], marker="D", linestyle="", color=COLORS["wine"], markersize=6),
-], ["отдельный training seed", "среднее"], loc="upper center", ncol=2,
+], ["individual training seed", "mean"], loc="upper center", ncol=2,
    bbox_to_anchor=(0.5, 1.01))
-fig.suptitle("Подтверждающий эксперимент: парный эффект P5 относительно P0",
+fig.suptitle("Confirmatory experiment: paired effect of P5 versus P0",
              fontsize=14, fontweight="semibold", y=1.07)
 fig.tight_layout()
 save_figure(fig, "figure_3_confirmatory_paired_effects")
 
 
-# 4. Независимые внешние генераторы
+# 4. Independent external generators
 external_parts = []
 for model, folder in [
     ("GP-MoLFormer", "external_gpmolformer"),
@@ -232,9 +232,9 @@ zero_shot = pd.read_csv(DATA / "external_zero_shot" / "zero_shot_aggregate_v2.cs
 zero_shot = zero_shot[zero_shot["fraction"] == 100]
 
 external_metrics = [
-    ("validity", "Валидность"),
-    ("strict_flp_yield", "Строгие FLP-like"),
-    ("final_candidate_yield", "Финальные кандидаты"),
+    ("validity", "Validity"),
+    ("strict_flp_yield", "Strict FLP-like yield"),
+    ("final_candidate_yield", "Final-candidate yield"),
 ]
 
 fig, axes = plt.subplots(1, 3, figsize=(12.2, 3.9))
@@ -257,19 +257,19 @@ for ax, (metric, title), letter in zip(axes, external_metrics, "ABC"):
                        alpha=0.42, s=26, edgecolor="white", linewidth=0.4, zorder=3)
     ax.set_title(title)
     ax.set_xticks([0, 42, 166], ["zero-shot", "42\n(25%)", "166\n(100%)"])
-    ax.set_xlabel("FLP-молекулы при fine-tuning")
+    ax.set_xlabel("FLP molecules used for fine-tuning")
     finish_axis(ax, percent=True)
     panel_letter(ax, letter)
 
 handles, labels = axes[0].get_legend_handles_labels()
 fig.legend(handles, labels, loc="upper center", ncol=3, bbox_to_anchor=(0.5, 1.01))
-fig.suptitle("Domain adaptation трёх предобученных генераторов",
+fig.suptitle("Domain adaptation of three pretrained generators",
              fontsize=14, fontweight="semibold", y=1.08)
 fig.tight_layout()
 save_figure(fig, "figure_4_external_generators")
 
 
-# 5. Независимая ручная проверка кандидатов
+# 5. Independent manual review of candidates
 review_dir = ROOT / "results" / "manual_validation"
 review_models = pd.read_csv(review_dir / "review_summary_by_model.csv")
 review_overall = pd.read_csv(review_dir / "review_summary_overall.csv").iloc[0]
@@ -293,14 +293,14 @@ ax.axvline(review_overall.acceptance_fraction, color=COLORS["graphite"],
 ax.set_yticks(range(len(review_models)), review_models["model"])
 ax.set_xlim(0.68, 1.03)
 ax.xaxis.set_major_formatter(PercentFormatter(1, decimals=0))
-ax.set_xlabel("Доля кандидатов, принятых при слепой проверке")
-ax.set_title("Ручная химическая проверка: 68 из 72 структур приняты", fontsize=12)
+ax.set_xlabel("Fraction accepted in blinded review")
+ax.set_title("Manual chemical review: 68 of 72 structures accepted", fontsize=12)
 finish_axis(ax)
 fig.tight_layout()
 save_figure(fig, "figure_5_manual_chemical_validation")
 
 
-# 6. Примеры структур из той же слепой проверки
+# 6. Representative structures from the blinded review
 review = pd.read_csv(review_dir / "review_results.csv")
 accepted = review[review["decision"] == "accept"]
 examples = (accepted.sort_values("review_id")
@@ -331,7 +331,7 @@ svg = Draw.MolsToGridImage(
 (FIGURE_DIR / "figure_6_representative_candidates.svg").write_text(svg, encoding="utf-8")
 
 
-# Итоговые таблицы для рисунков и текста статьи
+# Tables used in the figures and manuscript
 prior_table = prior_seeds.groupby("prior").agg(
     validity_mean=("validity", "mean"),
     main_group_fraction_mean=("main_group_fraction_unique_valid", "mean"),
@@ -395,5 +395,5 @@ manifest = {
 (TABLE_DIR / "publication_manifest.json").write_text(
     json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
 
-print("Таблицы:", TABLE_DIR)
-print("Рисунки:", FIGURE_DIR)
+print("Tables:", TABLE_DIR)
+print("Figures:", FIGURE_DIR)

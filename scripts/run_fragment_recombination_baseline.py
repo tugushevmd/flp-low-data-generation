@@ -43,8 +43,8 @@ def main():
         "canonical_smiles",
     ))
     same_library = set(template_smiles) == old_library
-    print("Структур в библиотеке:", len(library))
-    print("Совпадает с исходной template-библиотекой:", same_library)
+    print("Structures in library:", len(library))
+    print("Matches the source template library:", same_library)
     print(library.groupby("lb_atom").size().to_string())
 
     full_audit, full_summary, full_funnel = audit_generation(
@@ -195,10 +195,10 @@ def main():
     )
 
     plot_metrics = [
-        ("validity", "Валидность"),
-        ("chemically_sane_fraction", "Химически корректные"),
-        ("strict_flp_yield", "Строгие FLP-like"),
-        ("fragment_candidate_yield", "Кандидаты вне curated set"),
+        ("validity", "Valid"),
+        ("chemically_sane_fraction", "Chemically sane"),
+        ("strict_flp_yield", "Strict FLP-like"),
+        ("fragment_candidate_yield", "Candidates outside curated set"),
     ]
     means = [run_summary[metric].mean() for metric, _ in plot_metrics]
     errors = [run_summary[metric].std() for metric, _ in plot_metrics]
@@ -211,7 +211,7 @@ def main():
         color=["#356859", "#7B6D8D", "#8C3B4A", "#66734E"],
         capsize=4,
     )
-    ax.set_ylabel("Доля от всех генераций")
+    ax.set_ylabel("Fraction of all generations")
     ax.set_title("Fragment recombination baseline")
     ax.set_ylim(0, 1.05)
     ax.tick_params(axis="x", rotation=12)
@@ -224,9 +224,9 @@ def main():
 
     print()
     print(aggregate.round(4).to_string(index=False))
-    print("Уникальных fragment candidates:", len(candidate_union))
+    print("Unique fragment candidates:", len(candidate_union))
     print(
-        "Кандидатов во всей библиотеке:",
+        "Candidates in the full library:",
         int(full_summary.at[0, "fragment_candidate_n"]),
     )
 

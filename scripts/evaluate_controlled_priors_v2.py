@@ -259,8 +259,8 @@ axes[0].errorbar(
     capsize=4,
 )
 axes[0].set_xticks(range(4), bpc_summary.index)
-axes[0].set_ylabel("Разница FLP BPC и general BPC")
-axes[0].set_title("Разрыв до дообучения")
+axes[0].set_ylabel("FLP BPC minus general BPC")
+axes[0].set_title("Gap before fine-tuning")
 
 axes[1].bar(
     range(4),
@@ -270,8 +270,8 @@ axes[1].bar(
     capsize=4,
 )
 axes[1].set_xticks(range(4), plot_table.index)
-axes[1].set_ylabel("Доля среди уникальных валидных")
-axes[1].set_title("Main-group элементы в исходной генерации")
+axes[1].set_ylabel("Fraction of unique valid molecules")
+axes[1].set_title("Main-group elements in zero-shot samples")
 
 for ax in axes:
     ax.spines[["top", "right"]].set_visible(False)
@@ -294,4 +294,4 @@ print(aggregate[[
     "strict_flp_yield_mean",
     "final_candidate_yield_mean",
 ]].round(4).to_string(index=False))
-print("Уникальных финальных кандидатов:", len(candidate_union))
+print("Unique final candidates:", len(candidate_union))
