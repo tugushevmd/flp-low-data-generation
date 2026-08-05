@@ -12,7 +12,15 @@
     "figure_5_manual_chemical_validation.pdf",
     "figure_5_manual_chemical_validation.png",
     "figure_6_representative_candidates.png",
-    "figure_6_representative_candidates.svg"
+    "figure_6_representative_candidates.svg",
+    "figure_s1_corpus_composition_audit.pdf",
+    "figure_s1_corpus_composition_audit.png",
+    "figure_s2_statistical_evidence.pdf",
+    "figure_s2_statistical_evidence.png",
+    "figure_s3_model_context.pdf",
+    "figure_s3_model_context.png",
+    "figure_s4_blind_decoy_review.pdf",
+    "figure_s4_blind_decoy_review.png"
   ],
   "tables": [
     "representative_candidates_v211.csv",
@@ -20,11 +28,42 @@
     "table_2_learning_curves_v211.csv",
     "table_3_confirmatory_effects_v211.csv",
     "table_4_external_generators_v211.csv",
-    "table_5_manual_validation_v211.csv"
+    "table_5_manual_validation_v211.csv",
+    "table_s10_file_integrity.csv",
+    "table_s11_blind_decoy_review.csv",
+    "table_s12_initial_manual_validation.csv",
+    "table_s1_corpus_composition.csv",
+    "table_s2_composition_differences.csv",
+    "table_s3_token_shifts.csv",
+    "table_s4_discovery_confirmatory_effects.csv",
+    "table_s5_dose_response_tests.csv",
+    "table_s6_checkpoint_selection.csv",
+    "table_s7_model_context.csv",
+    "table_s8_fragment_baseline.csv",
+    "table_s9_protocol_audit.csv"
   ],
   "manual_validation": {
-    "accepted": 68,
-    "reviewed": 72,
-    "fraction": 0.9444444444444444
+    "initial_candidate_review": {
+      "accepted": 68,
+      "reviewed": 72,
+      "fraction": 0.9444444444444444
+    },
+    "candidate_plus_decoy_review": {
+      "candidate acceptance rate": {
+        "successes": 24,
+        "total": 24,
+        "fraction": 1.0
+      },
+      "B-centered decoy rejection rate": {
+        "successes": 13,
+        "total": 18,
+        "fraction": 0.7222222222222222
+      },
+      "B-centered accepted-structure precision": {
+        "successes": 24,
+        "total": 29,
+        "fraction": 0.8275862068965517
+      }
+    }
   }
 }

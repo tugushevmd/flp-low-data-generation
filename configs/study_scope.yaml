@@ -1,0 +1,21 @@
+scope_version: 1.0
+target: boron-centered FLP-like molecules
+
+lewis_acid:
+  required_element: B
+  required_state: neutral tricoordinate boron
+
+lewis_base:
+  allowed_families:
+    - phosphine
+    - amine
+    - aromatic nitrogen
+
+outside_primary_scope:
+  - Al-only Lewis-acid systems
+  - Si-only Lewis-acid systems
+  - Ge-only Lewis-acid systems
+
+interpretation: >-
+  Out-of-scope structures are not classified as chemically invalid. The scope
+  boundary is used to keep all model comparisons consistent with evaluator 2.1.1.

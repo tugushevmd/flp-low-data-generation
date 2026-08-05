@@ -1,0 +1,15 @@
+section,check,value,target_or_limit
+FLP split,train molecules,166,166
+FLP split,validation molecules,20,20
+FLP split,exact train-validation overlap,0,0
+FLP split,train contained in full reference,True,True
+FLP split,validation contained in full reference,True,True
+Pretraining leakage,selected main-group molecules,7500,
+Pretraining leakage,exact matches to curated FLP,0,0
+Pretraining leakage,exact matches to templates,0,0
+Pretraining leakage,maximum SNN to curated FLP,0.39622641509433965,0.4
+Pretraining leakage,mean SNN to curated FLP,0.18127501282936806,
+Corpus balance,maximum matched-component SMD,0.1120416351528006,0.2
+Corpus balance,maximum full-corpus SMD versus P0,0.0103930491159834,0.2
+Checkpoint robustness,"P5-P0 BPC improvement, selected checkpoint",0.0187161117527734,
+Checkpoint robustness,"P5-P0 BPC improvement, fixed 8000 exposures",0.0192742661298823,

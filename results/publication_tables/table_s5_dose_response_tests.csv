@@ -1,0 +1,14 @@
+analysis,metric,fraction,ordered_levels,seeds,strictly_monotonic_seeds,page_statistic,exact_one_sided_p
+frozen_prior,flp_gap,,P0 < P0.1 < P1 < P5,3,3,90.0,7.233796296296296e-05
+fine_tuning,validity,25.0,P0 < P1 < P5,3,1,40.0,0.08796296296296297
+fine_tuning,strict_flp_yield,25.0,P0 < P1 < P5,3,1,38.0,0.2777777777777778
+fine_tuning,final_candidate_yield,25.0,P0 < P1 < P5,3,1,38.0,0.2777777777777778
+fine_tuning,validation_bpc,25.0,P0 < P1 < P5,3,2,41.0,0.032407407407407406
+fine_tuning,validity,50.0,P0 < P1 < P5,3,0,37.0,0.4444444444444444
+fine_tuning,strict_flp_yield,50.0,P0 < P1 < P5,3,1,37.0,0.4444444444444444
+fine_tuning,final_candidate_yield,50.0,P0 < P1 < P5,3,0,36.0,0.5555555555555556
+fine_tuning,validation_bpc,50.0,P0 < P1 < P5,3,2,41.0,0.032407407407407406
+fine_tuning,validity,100.0,P0 < P1 < P5,3,3,42.0,0.004629629629629629
+fine_tuning,strict_flp_yield,100.0,P0 < P1 < P5,3,3,42.0,0.004629629629629629
+fine_tuning,final_candidate_yield,100.0,P0 < P1 < P5,3,3,42.0,0.004629629629629629
+fine_tuning,validation_bpc,100.0,P0 < P1 < P5,3,2,41.0,0.032407407407407406

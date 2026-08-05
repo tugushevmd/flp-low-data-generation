@@ -1,0 +1,2 @@
+method,library_size,validity_mean,strict_flp_yield_mean,template_relative_final_yield,fragment_candidate_yield,interpretation
+Fragment recombination enumerator,3780,1.0,1.0,0.0,0.503,rule-based chemical upper bound; template-relative novelty is zero by construction

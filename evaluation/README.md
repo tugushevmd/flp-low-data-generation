@@ -1,6 +1,6 @@
 # FLP evaluator 2.1.1
 
-The evaluator provides a reproducible structural screen for generated SMILES.
+The evaluator provides a reproducible structural screen for generated SMILES in the boron-centered FLP-like domain.
 
 It checks:
 
@@ -16,9 +16,10 @@ Phosphorus directly bonded to oxygen is not classified as a phosphine Lewis base
 
 `Strict FLP-like` is a graph-based screening label. It is not proof of frustrated Lewis-pair behaviour, reactivity, catalytic performance, stability or synthetic accessibility.
 
+Al-, Si- and Ge-only Lewis-acid systems are outside the evaluator scope. Their exclusion should be read as a study boundary, not as a claim that these motifs cannot form Lewis pairs.
+
 The control structures are stored in `controls.csv`, and all evaluator checks can be run with:
 
 ```bash
 python -m unittest tests.test_evaluator -v
 ```
-

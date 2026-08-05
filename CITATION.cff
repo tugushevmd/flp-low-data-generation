@@ -1,10 +1,9 @@
 cff-version: 1.2.0
 message: "If you use this repository, please cite the accompanying manuscript or this software record."
-title: "Low-data generation of FLP-like molecules"
+title: "Low-data generation of boron-centered FLP-like molecules"
 type: software
 authors:
   - family-names: "Tugushev"
     given-names: "Mikhail"
 version: 0.1.0
 date-released: 2026-08-04
-

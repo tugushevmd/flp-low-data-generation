@@ -1,6 +1,8 @@
-# Low-data generation of FLP-like molecules
+# Low-data generation of boron-centered FLP-like molecules
 
-This repository studies how the chemical composition of a pretraining corpus affects molecular generation in a small and atypical target domain: frustrated Lewis pair (FLP)-like structures.
+This repository studies how the chemical composition of a pretraining corpus affects molecular generation in a small and atypical target domain: boron-centered frustrated Lewis pair (FLP)-like structures.
+
+The operational target requires a neutral tricoordinate boron Lewis-acid centre and an allowed phosphorus- or nitrogen-based Lewis-base centre. Al-, Si- and Ge-only Lewis-acid systems are outside the primary scope; they are not classified as chemically invalid.
 
 The central controlled experiment keeps the tokenizer, GRU architecture, corpus size, training budget and FLP fine-tuning data fixed. Only the fraction of main-group molecules in pretraining changes: `P0` (0%), `P0.1` (0.1%), `P1` (1%) and `P5` (5%). MolGPT, REINVENT and GP-MoLFormer are included as external reference models, not as a causal architecture comparison.
 
@@ -9,14 +11,16 @@ The central controlled experiment keeps the tokenizer, GRU architecture, corpus 
 ## Main results
 
 - The frozen-prior FLP BPC gap decreases from `1.134` for P0 to `0.530` for P5.
-- With 166 FLP training molecules, P5 improves over P0 in all six paired training seeds.
-- At 166 molecules, the mean P5-P0 changes are `+5.36` percentage points in validity, `+4.29` points in strict FLP-like yield and `+2.78` points in final candidate yield.
-- The corresponding one-sided paired sign tests give `p = 0.0156`.
-- At 83 molecules the direction is generally favourable, but generation-level effects are less stable.
-- The final-candidate yields of the external models at 166 molecules are 14.5% for GP-MoLFormer, 20.7% for MolGPT and 29.6% for REINVENT.
-- An independent blinded chemical review accepted 68 of 72 sampled final candidates (94.4%, Wilson 95% CI 86.6-97.8%).
+- The four-level frozen-prior trend is monotonic in all three seeds (exact blocked permutation `p = 7.2e-5`).
+- P0 and P5 remain closely matched in the full corpora: the largest absolute structural SMD is `0.010`, and SMILES-token Jensen-Shannon divergence is `0.00066`.
+- With 166 FLP molecules, strict FLP-like yield rises from `8.36 +/- 0.95%` for P0 to `12.64 +/- 1.29%` for P5 across six paired seeds.
+- The discovery and confirmatory cohorts both favour P5 in 3/3 seeds. Their mean strict-yield changes are `+4.04` and `+4.53` percentage points, respectively. The pooled estimate is `+4.29` points (95% CI `+2.61` to `+5.97`).
+- The exact one-sided sign test is `p = 0.125` within each three-seed cohort and `p = 0.0156` in the pooled six-seed analysis. The pooled result is reported as supporting evidence, not as a second confirmatory test.
+- At 166 molecules, final-candidate yield is `7.1%` for controlled GRU P5, `20.7%` for MolGPT and `29.6%` for REINVENT. GP-MoLFormer was evaluated only at 42 molecules, where its yield is `4.5%`.
+- A data-matched character 5-gram baseline produces no final candidates. The fragment recombination baseline is reported separately as a rule-based chemical upper bound, not as a learned model.
+- A first blinded review accepted 68 of 72 sampled final candidates (94.4%, Wilson 95% CI 86.6-97.8%). In a second mixed review, all 24 model candidates were accepted and 13 of 21 filter-derived decoys were rejected. Three accepted decoys were Al/Si-only systems outside the final B-centered scope; after their removal, 13 of 18 within-scope decoys were rejected.
 
-These results support a limited claim: a chemically closer prior improves low-data adaptation in the controlled GRU experiment. `Strict FLP-like` is a structural screening rule. It does not establish frustration, catalytic activity or synthetic accessibility.
+These results support a limited claim: a chemically closer prior improves low-data adaptation in the controlled GRU experiment. `Strict FLP-like` is a B-centered structural screening rule. It does not establish frustration, catalytic activity or synthetic accessibility.
 
 ## Repository structure
 
@@ -50,10 +54,10 @@ python -m unittest discover -s tests -v
 Rebuild the final figures and tables:
 
 ```bash
-python scripts/build_publication_figures_v211.py
+python scripts/rebuild_release.py
 ```
 
-The command reads the compact tables in `results/` and writes the figures to `figures/`.
+The command rebuilds all analysis tables and figures, then runs the test suite. It reads the compact tables in `results/` and writes publication outputs to `results/publication_tables/` and `figures/`.
 
 ## Recalculate the controlled experiment
 
@@ -93,7 +97,7 @@ PyTorch should be installed for the CUDA version available on the machine. Colab
 - Generation seeds are averaged within each training run. The training seed is the unit of replication.
 - The evaluator was frozen at version `2.1.1` before the final recalculation.
 - The manual validation sample was drawn after the automatic filter was frozen.
+- The blinded decoy panel and its scored results are in `results/blind_decoy_review/`.
 - Model weights and large external archives are documented in [artifacts/README.md](artifacts/README.md) and are not stored in Git.
 
 Further details are in [REPRODUCIBILITY.md](REPRODUCIBILITY.md), [data/README.md](data/README.md) and [evaluation/README.md](evaluation/README.md).
-

@@ -27,6 +27,7 @@ COLORS = {
 }
 
 MODEL_COLORS = {
+    "Controlled GRU P5": COLORS["graphite"],
     "GP-MoLFormer": COLORS["green"],
     "MolGPT": COLORS["wine"],
     "REINVENT": COLORS["violet"],
@@ -217,7 +218,7 @@ fig.tight_layout()
 save_figure(fig, "figure_3_confirmatory_paired_effects")
 
 
-# 4. Independent external generators
+# 4. Controlled GRU and external generators
 external_parts = []
 for model, folder in [
     ("GP-MoLFormer", "external_gpmolformer"),
@@ -228,8 +229,14 @@ for model, folder in [
     part["model"] = model
     external_parts.append(part)
 external_seeds = pd.concat(external_parts, ignore_index=True)
+controlled_p5 = curve_seeds[curve_seeds["family"] == "P5"].copy()
+controlled_p5["model"] = "Controlled GRU P5"
+model_seeds = pd.concat([controlled_p5, external_seeds], ignore_index=True)
+
 zero_shot = pd.read_csv(DATA / "external_zero_shot" / "zero_shot_aggregate_v2.csv")
 zero_shot = zero_shot[zero_shot["fraction"] == 100]
+controlled_zero = pd.read_csv(DATA / "controlled_priors" / "aggregate_v2.csv")
+controlled_zero = controlled_zero[controlled_zero["prior"] == "P5"].iloc[0]
 
 external_metrics = [
     ("validity", "Validity"),
@@ -241,14 +248,21 @@ fig, axes = plt.subplots(1, 3, figsize=(12.2, 3.9))
 for ax, (metric, title), letter in zip(axes, external_metrics, "ABC"):
     for model in MODEL_COLORS:
         color = MODEL_COLORS[model]
-        zero = zero_shot[(zero_shot["model"] == model) &
-                         (zero_shot["metric"] == metric)].iloc[0]
-        model_data = external_seeds[external_seeds["model"] == model]
+        if model == "Controlled GRU P5":
+            zero_mean = controlled_zero[f"{metric}_mean"]
+        else:
+            zero_row = zero_shot[(zero_shot["model"] == model) &
+                                 (zero_shot["metric"] == metric)].iloc[0]
+            zero_mean = zero_row["mean"]
+
+        model_data = model_seeds[model_seeds["model"] == model]
         means = model_data.groupby("fraction")[metric].mean().reindex([25, 100])
         x = np.array([0, 42, 166])
-        y = np.array([zero["mean"], means.loc[25], means.loc[100]])
-        ax.plot(x, y, color=color, linewidth=2.1, marker="o", markersize=5, label=model)
-        ax.scatter([0], [zero["mean"]], s=70, facecolor="white",
+        y = np.array([zero_mean, means.loc[25], means.loc[100]], dtype=float)
+        present = np.isfinite(y)
+        ax.plot(x[present], y[present], color=color, linewidth=2.1,
+                marker="o", markersize=5, label=model)
+        ax.scatter([0], [zero_mean], s=70, facecolor="white",
                    edgecolor=color, linewidth=1.8, zorder=4)
         for fraction in [25, 100]:
             values = model_data.loc[model_data["fraction"] == fraction, metric]
@@ -262,14 +276,14 @@ for ax, (metric, title), letter in zip(axes, external_metrics, "ABC"):
     panel_letter(ax, letter)
 
 handles, labels = axes[0].get_legend_handles_labels()
-fig.legend(handles, labels, loc="upper center", ncol=3, bbox_to_anchor=(0.5, 1.01))
-fig.suptitle("Domain adaptation of three pretrained generators",
+fig.legend(handles, labels, loc="upper center", ncol=4, bbox_to_anchor=(0.5, 1.01))
+fig.suptitle("Controlled GRU and pretrained reference generators",
              fontsize=14, fontweight="semibold", y=1.08)
 fig.tight_layout()
 save_figure(fig, "figure_4_external_generators")
 
 
-# 5. Independent manual review of candidates
+# 5. Blinded candidate-plus-decoy review
 review_dir = ROOT / "results" / "manual_validation"
 review_models = pd.read_csv(review_dir / "review_summary_by_model.csv")
 review_overall = pd.read_csv(review_dir / "review_summary_overall.csv").iloc[0]
@@ -278,23 +292,36 @@ review_models["order"] = review_models["model"].map({
 })
 review_models = review_models.sort_values("order")
 
-fig, ax = plt.subplots(figsize=(7.2, 3.6))
-for y, row in enumerate(review_models.itertuples()):
-    color = MODEL_COLORS[row.model]
-    ax.errorbar(row.acceptance_fraction, y,
-                xerr=[[row.acceptance_fraction - row.ci95_low],
-                      [row.ci95_high - row.acceptance_fraction]],
+blind_metrics = pd.read_csv(
+    ROOT / "results" / "blind_decoy_review" / "blind_review_metrics.csv"
+).set_index("metric")
+metric_order = [
+    "candidate acceptance rate",
+    "B-centered decoy rejection rate",
+    "B-centered accepted-structure precision",
+]
+metric_labels = [
+    "Candidate acceptance",
+    "Decoy rejection",
+    "Accepted-structure precision",
+]
+metric_colors = [COLORS["green"], COLORS["wine"], COLORS["violet"]]
+main_review = blind_metrics.loc[metric_order].reset_index()
+
+fig, ax = plt.subplots(figsize=(7.5, 3.7))
+for y, (row, color) in enumerate(zip(main_review.itertuples(), metric_colors)):
+    ax.errorbar(row.value, y,
+                xerr=[[row.value - row.ci95_low],
+                      [row.ci95_high - row.value]],
                 fmt="o", markersize=8, color=color, ecolor=color,
                 elinewidth=2, capsize=4)
-    ax.text(min(row.ci95_high + 0.018, 1.015), y,
-            f"{row.accept}/{row.reviewed}", va="center", fontsize=9)
-ax.axvline(review_overall.acceptance_fraction, color=COLORS["graphite"],
-           linewidth=1, linestyle="--", alpha=0.7)
-ax.set_yticks(range(len(review_models)), review_models["model"])
-ax.set_xlim(0.68, 1.03)
+    ax.text(min(row.ci95_high + 0.025, 1.015), y,
+            f"{row.successes}/{row.total}", va="center", fontsize=9)
+ax.set_yticks(range(len(metric_labels)), metric_labels)
+ax.set_xlim(0.38, 1.04)
 ax.xaxis.set_major_formatter(PercentFormatter(1, decimals=0))
-ax.set_xlabel("Fraction accepted in blinded review")
-ax.set_title("Manual chemical review: 68 of 72 structures accepted", fontsize=12)
+ax.set_xlabel("Fraction")
+ax.set_title("Blinded B-centered candidate-plus-decoy review", fontsize=12)
 finish_axis(ax)
 fig.tight_layout()
 save_figure(fig, "figure_5_manual_chemical_validation")
@@ -368,7 +395,7 @@ external_columns = [
     "scaffold_novelty_vs_train",
 ]
 external_table = (
-    external_seeds.groupby(["model", "fraction"])[external_columns]
+    model_seeds.groupby(["model", "fraction"])[external_columns]
     .agg(["mean", "std"])
     .reset_index()
 )
@@ -378,8 +405,10 @@ external_table.columns = [
 ]
 external_table.to_csv(
     TABLE_DIR / "table_4_external_generators_v211.csv", index=False)
-review_models.drop(columns="order").to_csv(
+main_review.to_csv(
     TABLE_DIR / "table_5_manual_validation_v211.csv", index=False)
+review_models.drop(columns="order").to_csv(
+    TABLE_DIR / "table_s12_initial_manual_validation.csv", index=False)
 examples.to_csv(TABLE_DIR / "representative_candidates_v211.csv", index=False)
 
 manifest = {
@@ -387,9 +416,19 @@ manifest = {
     "figures": sorted(path.name for path in FIGURE_DIR.iterdir()),
     "tables": sorted(path.name for path in TABLE_DIR.glob("*.csv")),
     "manual_validation": {
-        "accepted": int(review_overall.accepted),
-        "reviewed": int(review_overall.reviewed),
-        "fraction": float(review_overall.acceptance_fraction),
+        "initial_candidate_review": {
+            "accepted": int(review_overall.accepted),
+            "reviewed": int(review_overall.reviewed),
+            "fraction": float(review_overall.acceptance_fraction),
+        },
+        "candidate_plus_decoy_review": {
+            row.metric: {
+                "successes": int(row.successes),
+                "total": int(row.total),
+                "fraction": float(row.value),
+            }
+            for row in main_review.itertuples()
+        },
     },
 }
 (TABLE_DIR / "publication_manifest.json").write_text(

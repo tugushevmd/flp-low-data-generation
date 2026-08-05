@@ -1,0 +1,9 @@
+blind_id,canonical_smiles,decision,comment,panel_class,source_id,decoy_reason,model,fraction,true_candidate,accepted,scope_status
+B007,Cc1cc(C)c(P[C](=CC(C)(C)C)[Al]([CH]([Si](C)(C)C)[Si](C)(C)C)[CH]([Si](C)(C)C)[Si](C)(C)C)c(C)c1,accept,,decoy,R008,no_LA,,,False,True,out_of_scope_non_boron_LA
+B008,CC(C)N(B(N(C(C)C)C(C)C)P(C(C)(C)C)C(C)(C)C)C(C)C,accept,,decoy,R061,"direct_B_N_bond, direct_B_P_bond",,,False,True,within_B_centered_scope
+B013,C1CCC(B(C2CCCCC2)N2CCCN3CCCN=C32)CC1,accept,,decoy,R060,direct_B_N_bond,,,False,True,within_B_centered_scope
+B016,CC(C)OP(=O)(C=[C](c1ccccc1)[Ge]([c]1ccccc1)([c]1ccccc1)[c]1ccccc1)OC(C)C,accept,,decoy,R072,phosphine_oxide_or_sulfide,,,False,True,within_B_centered_scope
+B034,CC(C)(C)P(C[Si](c1c(F)c(F)c(F)c(F)c1F)(c1c(F)c(F)c(F)c(F)c1F)c1c(F)c(F)c(F)c(F)c1F)C(C)(C)C,accept,,decoy,R023,no_LA,,,False,True,out_of_scope_non_boron_LA
+B036,CB1N2C(=CN3CCC(C)(C)N=C32)CCC1(C)C,accept,,decoy,R058,direct_B_N_bond,,,False,True,within_B_centered_scope
+B042,CC(C)(C)C=[C](PC([Si](C)(C)C)[Si](C)(C)C)[Al]([CH]([Si](C)(C)C)[Si](C)(C)C)[CH]([Si](C)(C)C)[Si](C)(C)C,accept,,decoy,R007,no_LA,,,False,True,out_of_scope_non_boron_LA
+B043,C1CC2CCCC(C1)B2N1CCCN2CCCN=C21,accept,,decoy,R059,direct_B_N_bond,,,False,True,within_B_centered_scope
