@@ -31,11 +31,12 @@ These tables are rebuilt by `python scripts/rebuild_release.py`.
 | `table_s12_initial_manual_validation.csv` | initial candidate-only review by model |
 | `table_s13_main_group_element_composition.csv` | element composition of the selected main-group component |
 | `table_s14_p5_candidate_funnel.csv` | pooled P5 strict, novel and final-candidate yields |
+| `table_s15_fragment_library_proximity.csv` | P0/P5 final-candidate proximity to the rule-based library |
 
 ## Figures
 
 Main figures cover prior compatibility, learning curves, confirmatory effects,
 model context, candidate-plus-decoy validation and representative structures.
 Supplementary figures cover corpus composition, statistical evidence, baseline
-context and decoy-class outcomes. PNG files are intended for quick inspection;
+context, decoy-class outcomes and fragment-library proximity. PNG files are intended for quick inspection;
 PDF or SVG files are the publication versions.

@@ -9,6 +9,7 @@ STEPS = [
     "analyze_corpus_composition.py",
     "analyze_statistical_evidence.py",
     "analyze_model_context.py",
+    "analyze_fragment_library_proximity.py",
     "audit_protocol.py",
     "score_blinded_decoy_review.py",
     "build_publication_figures_v211.py",

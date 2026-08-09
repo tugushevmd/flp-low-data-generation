@@ -20,7 +20,9 @@
     "figure_s3_model_context.pdf",
     "figure_s3_model_context.png",
     "figure_s4_blind_decoy_review.pdf",
-    "figure_s4_blind_decoy_review.png"
+    "figure_s4_blind_decoy_review.png",
+    "figure_s5_fragment_library_proximity.pdf",
+    "figure_s5_fragment_library_proximity.png"
   ],
   "tables": [
     "representative_candidates_v211.csv",
@@ -34,6 +36,7 @@
     "table_s12_initial_manual_validation.csv",
     "table_s13_main_group_element_composition.csv",
     "table_s14_p5_candidate_funnel.csv",
+    "table_s15_fragment_library_proximity.csv",
     "table_s1_corpus_composition.csv",
     "table_s2_composition_differences.csv",
     "table_s3_token_shifts.csv",

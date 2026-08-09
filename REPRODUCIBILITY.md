@@ -51,9 +51,9 @@ For pooled P5 runs at the 166-molecule training size, mean yield is 12.64% at th
 
 Strict FLP-like yield is the primary generation metric; validity and final-candidate yield are secondary descriptive metrics. P5 and P0 are compared within the same training seeds.
 
-Seeds 11, 22 and 33 form the discovery cohort. Seeds 44, 55 and 66 form the independent confirmatory cohort. Results are reported separately for both cohorts, with the pooled six-seed analysis used only as supporting evidence. Mean paired effects are accompanied by t-based 95% confidence intervals, exact sign-flip tests and sign tests. The sign test reaches its minimum possible one-sided value of 0.125 in each three-seed cohort and 0.0156 after pooling.
+Seeds 11, 22 and 33 form the discovery cohort. Seeds 44, 55 and 66 form the independent confirmatory cohort. Results are reported separately for both cohorts, with the pooled six-seed analysis used only as supporting evidence. Mean paired effects are accompanied by t-based 95% confidence intervals, exact sign-flip tests and sign tests. The sign test reaches its minimum possible one-sided value of 0.125 (`1/8`) in each three-seed cohort and 0.0156 (`1/64`) after pooling. Effect sizes and confidence intervals carry the quantitative interpretation.
 
-The four-level frozen-prior dose response is tested with an exact blocked Page-style permutation test over all 13,824 within-seed label permutations. Fine-tuning trends are analysed separately for each FLP training-set size.
+The four-level frozen-prior dose response is tested with an exact blocked Page-style permutation test over all 13,824 within-seed label permutations. Its `p = 7.23e-5` is the minimum attainable value (`1/13,824`). Fine-tuning trends are analysed separately for each FLP training-set size. At the 166-molecule size, the three-level P0 < P1 < P5 strict-yield result also reaches its permutation floor, `p = 0.00463` (`1/216`).
 
 ## Manual chemical validation
 
@@ -65,7 +65,9 @@ A second panel mixes 24 model candidates with 21 chemically valid, filter-derive
 
 The character 5-gram model is the data-matched non-neural baseline trained on the same 166 FLP molecules. The fragment recombination library is a rule-based enumerator and is therefore treated as a chemical upper bound rather than a data-matched learner. It gives a 50.3% fragment-candidate yield after strict, curated-seed novelty and similarity filtering. Template-relative final novelty is zero by construction because the enumerated library is also included in the template reference.
 
-Controlled GRU P5, MolGPT, REINVENT and GP-MoLFormer are evaluated with the same frozen filter, but their architectures and pretraining corpora differ. These cross-model results provide context and do not isolate a causal architecture effect. The archived GP-MoLFormer benchmark contains only the 42-molecule experiment; no protocol-matched 166-molecule run is available.
+Library proximity is therefore measured continuously rather than by exact novelty. Among 586 unique P5 final candidates, median nearest-library ECFP4 Tanimoto similarity is 0.426; 1.54% reach 0.80, 0.51% reach 0.90, none reach 0.95, and 15.5% share a Murcko scaffold with a library member. The corresponding P0 values are similar (median 0.415, 0.54% at or above 0.80 and 13.2% scaffold overlap). These results show that the controlled generators are not limited to exact or near-exact members of the rule-based library.
+
+Controlled GRU P5, MolGPT, REINVENT and GP-MoLFormer are evaluated with the same frozen filter, but their architectures and pretraining corpora differ. These cross-model results provide context and do not isolate a causal architecture effect. The archived GP-MoLFormer benchmark contains only the 42-molecule experiment. An earlier draft quoted a 14.5% final-candidate yield from an exploratory 166-molecule run, but its raw generation archive was not retained and the result could not be re-evaluated under evaluator 2.1.1. It is therefore omitted from the frozen comparison.
 
 ## Software freeze
 
