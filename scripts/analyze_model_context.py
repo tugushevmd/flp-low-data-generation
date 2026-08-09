@@ -94,6 +94,34 @@ fragment_table = pd.DataFrame([{
 }])
 fragment_table.to_csv(TABLES / "table_s8_fragment_baseline.csv", index=False)
 
+pooled = pd.read_csv(
+    RESULTS / "controlled_prior_confirmatory" / "combined_seed_summary_v2.csv"
+)
+pooled = pooled[(pooled["family"] == "P5") & (pooled["fraction"] == 100)]
+funnel_rows = []
+previous_yield = None
+strict_yield = pooled["strict_flp_yield"].mean()
+for stage, column in [
+    ("strict FLP-like", "strict_flp_yield"),
+    ("novel FLP-like", "novel_flp_yield"),
+    ("final candidate", "final_candidate_yield"),
+]:
+    mean_yield = pooled[column].mean()
+    funnel_rows.append({
+        "stage": stage,
+        "runs": len(pooled),
+        "mean_yield": mean_yield,
+        "sd": pooled[column].std(),
+        "loss_from_previous_pp": (
+            np.nan if previous_yield is None else 100 * (previous_yield - mean_yield)
+        ),
+        "retained_from_strict": mean_yield / strict_yield,
+    })
+    previous_yield = mean_yield
+
+funnel_table = pd.DataFrame(funnel_rows)
+funnel_table.to_csv(TABLES / "table_s14_p5_candidate_funnel.csv", index=False)
+
 plt.rcParams.update({
     "font.family": "DejaVu Sans",
     "font.size": 10,
@@ -135,3 +163,5 @@ print(model_table[[
     "model", "flp_train_n", "validity_mean",
     "strict_flp_yield_mean", "final_candidate_yield_mean",
 ]].round(4).to_string(index=False))
+print()
+print(funnel_table.round(4).to_string(index=False))

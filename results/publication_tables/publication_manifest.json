@@ -32,6 +32,8 @@
     "table_s10_file_integrity.csv",
     "table_s11_blind_decoy_review.csv",
     "table_s12_initial_manual_validation.csv",
+    "table_s13_main_group_element_composition.csv",
+    "table_s14_p5_candidate_funnel.csv",
     "table_s1_corpus_composition.csv",
     "table_s2_composition_differences.csv",
     "table_s3_token_shifts.csv",

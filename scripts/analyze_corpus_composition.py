@@ -8,6 +8,7 @@ from zipfile import ZipFile
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from matplotlib.ticker import PercentFormatter
 
 
 PRIORS = ["P0", "P0.1", "P1", "P5"]
@@ -108,6 +109,11 @@ def main():
             row.update(scaffold_statistics(table["scaffold"]))
             summary_rows.append(row)
 
+        with gzip.GzipFile(
+            fileobj=archive.open("selected_main_group.csv.gz")
+        ) as handle:
+            selected_main_group = pd.read_csv(handle)
+
     summary = pd.DataFrame(summary_rows)
     summary.to_csv(table_dir / "table_s1_corpus_composition.csv", index=False)
 
@@ -157,6 +163,36 @@ def main():
         index=False,
     )
 
+    element_sets = selected_main_group["elements"].str.split(",").map(set)
+    query_counts = selected_main_group["query_element"].value_counts()
+    element_rows = []
+    for element in ["B", "P", "N", "Si", "Al", "Ge"]:
+        presence_n = int(element_sets.map(lambda values: element in values).sum())
+        query_n = int(query_counts.get(element, 0))
+        element_rows.append({
+            "feature": element,
+            "query_selection_n": query_n,
+            "query_selection_fraction": query_n / len(selected_main_group),
+            "molecule_presence_n": presence_n,
+            "molecule_presence_fraction": presence_n / len(selected_main_group),
+        })
+
+    b_with_base = element_sets.map(
+        lambda values: "B" in values and bool({"P", "N"} & values)
+    ).sum()
+    element_rows.append({
+        "feature": "B + (P or N)",
+        "query_selection_n": np.nan,
+        "query_selection_fraction": np.nan,
+        "molecule_presence_n": int(b_with_base),
+        "molecule_presence_fraction": b_with_base / len(selected_main_group),
+    })
+    element_table = pd.DataFrame(element_rows)
+    element_table.to_csv(
+        table_dir / "table_s13_main_group_element_composition.csv",
+        index=False,
+    )
+
     plt.rcParams.update({
         "figure.dpi": 120,
         "font.size": 10,
@@ -167,7 +203,7 @@ def main():
         "grid.alpha": 0.2,
         "legend.frameon": False,
     })
-    fig, axes = plt.subplots(1, 3, figsize=(14, 4.3))
+    fig, axes = plt.subplots(1, 4, figsize=(17.5, 4.3))
 
     smd = comparisons.pivot(
         index="feature",
@@ -231,6 +267,30 @@ def main():
     axes[2].set_ylabel("Fraction of corpus")
     axes[2].legend(fontsize=8)
 
+    plotted_elements = element_table.iloc[:6]
+    y = np.arange(len(plotted_elements))
+    height = 0.34
+    axes[3].barh(
+        y - height / 2,
+        plotted_elements["query_selection_fraction"],
+        height,
+        color=COLORS["P1"],
+        label="Selection target",
+    )
+    axes[3].barh(
+        y + height / 2,
+        plotted_elements["molecule_presence_fraction"],
+        height,
+        color=COLORS["P5"],
+        label="Present in molecule",
+    )
+    axes[3].set_yticks(y, plotted_elements["feature"])
+    axes[3].invert_yaxis()
+    axes[3].xaxis.set_major_formatter(PercentFormatter(1, decimals=0))
+    axes[3].set_title("Selected main-group component")
+    axes[3].set_xlabel("Fraction of 7,500 molecules")
+    axes[3].legend(fontsize=8)
+
     fig.suptitle("Controlled-prior corpus composition audit", fontsize=15, weight="bold")
     fig.tight_layout()
     for extension in ["png", "pdf"]:
@@ -248,6 +308,8 @@ def main():
     ).rename("maximum absolute SMD").round(4).to_string())
     print()
     print(divergence[["prior", "kl_from_P0", "js_divergence"]].round(6).to_string(index=False))
+    print()
+    print(element_table.round(4).to_string(index=False))
 
 
 if __name__ == "__main__":

@@ -13,12 +13,16 @@ The central controlled experiment keeps the tokenizer, GRU architecture, corpus 
 - The frozen-prior FLP BPC gap decreases from `1.134` for P0 to `0.530` for P5.
 - The four-level frozen-prior trend is monotonic in all three seeds (exact blocked permutation `p = 7.2e-5`).
 - P0 and P5 remain closely matched in the full corpora: the largest absolute structural SMD is `0.010`, and SMILES-token Jensen-Shannon divergence is `0.00066`.
+- The 7,500 selected main-group molecules in P5 contain B in `40.1%`, P in `40.4%`, N in `49.9%`, Si in `11.3%`, Al in `5.0%` and Ge in `5.0%`; `12.5%` contain B together with P or N.
 - With 166 FLP molecules, strict FLP-like yield rises from `8.36 +/- 0.95%` for P0 to `12.64 +/- 1.29%` for P5 across six paired seeds.
 - The discovery and confirmatory cohorts both favour P5 in 3/3 seeds. Their mean strict-yield changes are `+4.04` and `+4.53` percentage points, respectively. The pooled estimate is `+4.29` points (95% CI `+2.61` to `+5.97`).
 - The exact one-sided sign test is `p = 0.125` within each three-seed cohort and `p = 0.0156` in the pooled six-seed analysis. The pooled result is reported as supporting evidence, not as a second confirmatory test.
-- At 166 molecules, final-candidate yield is `7.1%` for controlled GRU P5, `20.7%` for MolGPT and `29.6%` for REINVENT. GP-MoLFormer was evaluated only at 42 molecules, where its yield is `4.5%`.
-- A data-matched character 5-gram baseline produces no final candidates. The fragment recombination baseline is reported separately as a rule-based chemical upper bound, not as a learned model.
-- A first blinded review accepted 68 of 72 sampled final candidates (94.4%, Wilson 95% CI 86.6-97.8%). In a second mixed review, all 24 model candidates were accepted and 13 of 21 filter-derived decoys were rejected. Three accepted decoys were Al/Si-only systems outside the final B-centered scope; after their removal, 13 of 18 within-scope decoys were rejected.
+- For P5, `12.64%` strict FLP-like yield becomes `10.93%` after reference-set novelty filtering and `7.07%` after the similarity window and remaining final-candidate filters.
+- At 166 molecules, final-candidate yield is `7.1%` for controlled GRU P5, `20.7%` for MolGPT and `29.6%` for REINVENT. The archived GP-MoLFormer benchmark contains only the 42-molecule experiment, where its yield is `4.5%`; no protocol-matched 166-molecule run is reported.
+- A data-matched character 5-gram baseline produces no final candidates. The rule-based fragment recombination library gives `50.3%` candidates outside the curated seed set, but template-relative final novelty is zero because the library itself is used as the template reference.
+- A first blinded review accepted 68 of 72 sampled final candidates (94.4%, Wilson 95% CI 86.6-97.8%). In a second mixed review, all 24 model candidates were accepted and 13 of 21 filter-derived decoys were rejected. Three accepted decoys were Al/Si-only systems outside the B-centered study scope; after their removal, 13 of 18 within-scope decoys were rejected.
+
+The frozen-prior BPC gap and the post-fine-tuning validation BPC difference measure different stages. Fine-tuning reduces P0 minus P5 validation BPC to `0.0187` bits, while the generation yields remain separated. In this experiment, similar teacher-forced validation likelihood after adaptation does not imply identical sampling behaviour.
 
 These results support a limited claim: a chemically closer prior improves low-data adaptation in the controlled GRU experiment. `Strict FLP-like` is a B-centered structural screening rule. It does not establish frustration, catalytic activity or synthetic accessibility.
 

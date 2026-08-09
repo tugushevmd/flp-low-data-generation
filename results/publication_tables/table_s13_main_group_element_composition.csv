@@ -1,0 +1,8 @@
+feature,query_selection_n,query_selection_fraction,molecule_presence_n,molecule_presence_fraction
+B,3000.0,0.4,3007,0.4009333333333333
+P,3000.0,0.4,3030,0.404
+N,0.0,0.0,3741,0.4988
+Si,750.0,0.1,844,0.11253333333333333
+Al,375.0,0.05,375,0.05
+Ge,375.0,0.05,375,0.05
+B + (P or N),,,935,0.12466666666666666

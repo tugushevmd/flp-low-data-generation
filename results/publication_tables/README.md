@@ -29,6 +29,8 @@ These tables are rebuilt by `python scripts/rebuild_release.py`.
 | `table_s10_file_integrity.csv` | split-file checksum verification |
 | `table_s11_blind_decoy_review.csv` | full-panel and B-centered review metrics |
 | `table_s12_initial_manual_validation.csv` | initial candidate-only review by model |
+| `table_s13_main_group_element_composition.csv` | element composition of the selected main-group component |
+| `table_s14_p5_candidate_funnel.csv` | pooled P5 strict, novel and final-candidate yields |
 
 ## Figures
 
