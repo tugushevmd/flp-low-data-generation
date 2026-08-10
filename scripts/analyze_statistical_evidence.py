@@ -196,6 +196,35 @@ def main():
         index=False,
     )
 
+    fixed_generation = pd.read_csv(
+        result_dir / "fixed_checkpoint_sensitivity/training_seed_summary_v2.csv"
+    ).assign(fraction=100)
+    checkpoint_rows = []
+    for rule, table in [
+        ("validation BPC", combined),
+        ("fixed 8000 exposures", fixed_generation),
+    ]:
+        for metric in [
+            "validity",
+            "strict_flp_yield",
+            "novel_flp_yield",
+            "final_candidate_yield",
+        ]:
+            row = paired_summary(
+                table,
+                metric,
+                100,
+                "pooled",
+                COHORTS["pooled"],
+            )
+            row["checkpoint_rule"] = rule
+            checkpoint_rows.append(row)
+    checkpoint_effects = pd.DataFrame(checkpoint_rows)
+    checkpoint_effects.to_csv(
+        table_dir / "table_s17_checkpoint_sensitivity.csv",
+        index=False,
+    )
+
     frozen = pd.read_csv(result_dir / "controlled_priors/frozen_bpc_runs.csv")
     frozen_matrix = frozen.pivot(
         index="training_seed",
@@ -277,7 +306,8 @@ def main():
         "grid.alpha": 0.2,
         "legend.frameon": False,
     })
-    fig, axes = plt.subplots(1, 3, figsize=(14, 4.3))
+    fig, axes = plt.subplots(2, 2, figsize=(12, 8.5))
+    axes = axes.flatten()
 
     forest = effects[
         (effects["metric"] == PRIMARY_METRIC)
@@ -338,6 +368,33 @@ def main():
     axes[2].set_title("Checkpoint robustness at 166 molecules")
     axes[2].tick_params(axis="x", rotation=15)
 
+    generation_sensitivity = checkpoint_effects[
+        checkpoint_effects["metric"] == PRIMARY_METRIC
+    ]
+    x = np.arange(len(generation_sensitivity))
+    axes[3].errorbar(
+        x,
+        generation_sensitivity["mean_improvement"] * 100,
+        yerr=np.vstack([
+            (
+                generation_sensitivity["mean_improvement"]
+                - generation_sensitivity["improvement_ci_low"]
+            ) * 100,
+            (
+                generation_sensitivity["improvement_ci_high"]
+                - generation_sensitivity["mean_improvement"]
+            ) * 100,
+        ]),
+        fmt="o",
+        capsize=5,
+        color="#356859",
+    )
+    axes[3].axhline(0, color="#686D70", linewidth=1)
+    axes[3].set_xticks(x, generation_sensitivity["checkpoint_rule"])
+    axes[3].set_ylabel("P5 - P0, percentage points")
+    axes[3].set_title("Generation checkpoint sensitivity")
+    axes[3].tick_params(axis="x", rotation=15)
+
     fig.suptitle("Statistical analysis of the controlled-prior experiment", fontsize=15, weight="bold")
     fig.tight_layout()
     for extension in ["png", "pdf"]:
@@ -356,6 +413,8 @@ def main():
     print(trends.round(5).to_string(index=False))
     print()
     print(checkpoint_summary.to_string(index=False))
+    print()
+    print(checkpoint_effects.round(4).to_string(index=False))
 
 
 if __name__ == "__main__":

@@ -6,6 +6,8 @@ The operational target requires a neutral tricoordinate boron Lewis-acid centre 
 
 The central controlled experiment keeps the tokenizer, GRU architecture, corpus size, training budget and FLP fine-tuning data fixed. Only the fraction of main-group molecules in pretraining changes: `P0` (0%), `P0.1` (0.1%), `P1` (1%) and `P5` (5%). MolGPT, REINVENT and GP-MoLFormer are included as external reference models, not as a causal architecture comparison.
 
+P0.1 is part of the frozen-prior analysis only. The generation-level dose experiment compares P0, P1 and P5.
+
 ![External generator benchmark](figures/figure_4_external_generators.png)
 
 ## Main results
@@ -14,16 +16,20 @@ The central controlled experiment keeps the tokenizer, GRU architecture, corpus 
 - The four-level frozen-prior trend is monotonic in all three seeds (exact blocked permutation `p = 7.2e-5`).
 - P0 and P5 remain closely matched in the full corpora: the largest absolute structural SMD is `0.010`, and SMILES-token Jensen-Shannon divergence is `0.00066`.
 - The 7,500 selected main-group molecules in P5 contain B in `40.1%`, P in `40.4%`, N in `49.9%`, Si in `11.3%`, Al in `5.0%` and Ge in `5.0%`; `12.5%` contain B together with P or N.
+- Of the 299 curated reference structures, 285 (`95.3%`) contain B. The remaining 14 are Al-containing systems, including two that also contain Si.
 - With 166 FLP molecules, strict FLP-like yield rises from `8.36 +/- 0.95%` for P0 to `12.64 +/- 1.29%` for P5 across six paired seeds.
 - The discovery and confirmatory cohorts both favour P5 in 3/3 seeds. Their mean strict-yield changes are `+4.04` and `+4.53` percentage points, respectively. The pooled estimate is `+4.29` points (95% CI `+2.61` to `+5.97`).
+- With the checkpoint fixed in advance at 8,000 exposures, strict yield is `8.22%` for P0 and `12.36%` for P5. The paired effect is `+4.13` points (95% CI `+2.29` to `+5.97`), with P5 ahead in all six seeds.
 - The exact one-sided sign test is `p = 0.125` within each three-seed cohort and `p = 0.0156` in the pooled six-seed analysis. The pooled result is reported as supporting evidence, not as a second confirmatory test.
 - For P5, `12.64%` strict FLP-like yield becomes `10.93%` after reference-set novelty filtering and `7.07%` after the similarity window and remaining final-candidate filters.
 - At 166 molecules, final-candidate yield is `7.1%` for controlled GRU P5, `20.7%` for MolGPT and `29.6%` for REINVENT. The archived GP-MoLFormer benchmark contains only the 42-molecule experiment, where its yield is `4.5%`. An earlier draft quoted `14.5%` from an unarchived exploratory 166-molecule run; that value is not included in the frozen comparison.
 - A data-matched character 5-gram baseline produces no final candidates. The rule-based fragment recombination library gives `50.3%` candidates outside the curated seed set, but template-relative final novelty is zero because the library itself is used as the template reference.
-- P5 final candidates are mostly outside the immediate neighbourhood of that library: their median nearest-library ECFP4 Tanimoto similarity is `0.426`, only `1.5%` reach `0.8`, and `15.5%` share a Murcko scaffold with a library member. P0 gives a similar distribution.
+- P5 final candidates are mostly outside the immediate neighbourhood of that library: their median nearest-library ECFP4 Tanimoto similarity is `0.426`, only `1.5%` reach `0.8`, and `15.5%` share a Murcko scaffold with a library member. P0 gives a similar distribution. P5 therefore increases candidate yield without materially shifting proximity to the enumerated fragment space.
 - A first blinded review accepted 68 of 72 sampled final candidates (94.4%, Wilson 95% CI 86.6-97.8%). In a second mixed review, all 24 model candidates were accepted and 13 of 21 filter-derived decoys were rejected. Three accepted decoys were Al/Si-only systems outside the B-centered study scope; after their removal, 13 of 18 within-scope decoys were rejected.
 
 The frozen-prior BPC gap and the post-fine-tuning validation BPC difference measure different stages. Fine-tuning reduces P0 minus P5 validation BPC to `0.0187` bits, while the generation yields remain separated. In this experiment, similar teacher-forced validation likelihood after adaptation does not imply identical sampling behaviour.
+
+The fixed-checkpoint run gives nearly the same generation effect as validation-based checkpoint selection (`+4.13` versus `+4.29` strict-yield points). The controlled result is therefore not explained by selecting checkpoints on validation BPC.
 
 These results support a limited claim: a chemically closer prior improves low-data adaptation in the controlled GRU experiment. `Strict FLP-like` is a B-centered structural screening rule. It does not establish frustration, catalytic activity or synthetic accessibility.
 
@@ -90,8 +96,9 @@ Run the notebooks in order:
 1. `01_controlled_prior_pretraining.ipynb`
 2. `02_controlled_prior_learning_curves.ipynb`
 3. `03_controlled_prior_confirmatory.ipynb`
+4. `04_fixed_checkpoint_sensitivity.ipynb`
 
-Upload `data/controlled_priors/controlled_prior_corpora.zip` to Colab or Kaggle before the first run. Each notebook saves its result and weight archives for the next stage. The three external-model notebooks reproduce the reference-model track.
+Upload `data/controlled_priors/controlled_prior_corpora.zip` to Colab or Kaggle before the first run. Each notebook saves its result and weight archives for the next stage. Notebook 4 uses the prior checkpoints from `controlled_prior_pretraining_weights.zip` and `controlled_prior_confirmatory_weights.zip`; it does not repeat prior pretraining. The three external-model notebooks reproduce the reference-model track.
 
 PyTorch should be installed for the CUDA version available on the machine. Colab and Kaggle already provide it; avoid replacing their PyTorch build unless necessary.
 

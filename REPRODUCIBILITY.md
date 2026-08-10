@@ -18,6 +18,8 @@ The primary controlled learning curves contain three training seeds (`11`, `22`,
 - Learning-curve subsets: 42, 83 and 166 structures.
 - Subsets are nested and selected before SMILES augmentation.
 
+Of the 299 curated structures, 285 (95.3%) contain B. The other 14 are Al-containing systems, including two that also contain Si. Their inclusion reflects the historical breadth of the collected FLP literature; the primary endpoint remains B-centered.
+
 The controlled priors contain 150,000 unique SMILES each. P0, P0.1, P1 and P5 contain 0, 150, 1,500 and 7,500 main-group structures, respectively. Replacement molecules were matched by molecular weight, heavy-atom count, ring counts, rotatable bonds and SMILES length.
 
 Within the 7,500 selected main-group molecules, B occurs in 3,007 structures (40.1%), P in 3,030 (40.4%), N in 3,741 (49.9%), Si in 844 (11.3%), Al in 375 (5.0%) and Ge in 375 (5.0%). The selection targets were 3,000 B, 3,000 P, 750 Si, 375 Al and 375 Ge structures. A total of 935 molecules (12.5%) contain B together with P or N.
@@ -29,6 +31,8 @@ The pretraining source pool was filtered against all 299 curated reference struc
 ## Model selection
 
 Checkpoints are selected using validation BPC. Test-generation metrics and manual review decisions do not participate in checkpoint selection. The selected checkpoint varies across seeds. A fixed-8000-exposure sensitivity analysis gives nearly the same pooled P5-P0 BPC improvement as validation-based selection (`0.0193` versus `0.0187`).
+
+Generation was also repeated from checkpoints fixed in advance at 8,000 exposures. Strict FLP-like yield was 8.22% for P0 and 12.36% for P5, giving a paired difference of +4.13 percentage points (95% CI +2.29 to +5.97; P5 higher in 6/6 seeds). Validation-selected checkpoints gave +4.29 points. Final-candidate yield at the fixed checkpoint was 4.28% for P0 and 6.73% for P5.
 
 The frozen-prior FLP BPC gap is the difference between FLP and general-domain BPC before adaptation. The post-fine-tuning value above is P0 minus P5 raw FLP validation BPC after adaptation. Fine-tuning largely closes the likelihood difference between the priors, but their generation yields remain different; the two quantities describe different stages of the experiment.
 
@@ -55,6 +59,8 @@ Seeds 11, 22 and 33 form the discovery cohort. Seeds 44, 55 and 66 form the inde
 
 The four-level frozen-prior dose response is tested with an exact blocked Page-style permutation test over all 13,824 within-seed label permutations. Its `p = 7.23e-5` is the minimum attainable value (`1/13,824`). Fine-tuning trends are analysed separately for each FLP training-set size. At the 166-molecule size, the three-level P0 < P1 < P5 strict-yield result also reaches its permutation floor, `p = 0.00463` (`1/216`).
 
+P0.1 was evaluated at the frozen-prior stage but was not included in FLP fine-tuning. The generation-level dose analysis therefore contains P0, P1 and P5 only.
+
 ## Manual chemical validation
 
 The external-model audit used a fresh stratified sample of 72 final candidates: 12 structures per model and training fraction. The reviewer was shown structure identifiers without model labels. Four structures were rejected. This first audit had one reviewer and no negative controls.
@@ -65,7 +71,7 @@ A second panel mixes 24 model candidates with 21 chemically valid, filter-derive
 
 The character 5-gram model is the data-matched non-neural baseline trained on the same 166 FLP molecules. The fragment recombination library is a rule-based enumerator and is therefore treated as a chemical upper bound rather than a data-matched learner. It gives a 50.3% fragment-candidate yield after strict, curated-seed novelty and similarity filtering. Template-relative final novelty is zero by construction because the enumerated library is also included in the template reference.
 
-Library proximity is therefore measured continuously rather than by exact novelty. Among 586 unique P5 final candidates, median nearest-library ECFP4 Tanimoto similarity is 0.426; 1.54% reach 0.80, 0.51% reach 0.90, none reach 0.95, and 15.5% share a Murcko scaffold with a library member. The corresponding P0 values are similar (median 0.415, 0.54% at or above 0.80 and 13.2% scaffold overlap). These results show that the controlled generators are not limited to exact or near-exact members of the rule-based library.
+Library proximity is therefore measured continuously rather than by exact novelty. Among 586 unique P5 final candidates, median nearest-library ECFP4 Tanimoto similarity is 0.426; 1.54% reach 0.80, 0.51% reach 0.90, none reach 0.95, and 15.5% share a Murcko scaffold with a library member. The corresponding P0 values are similar (median 0.415, 0.54% at or above 0.80 and 13.2% scaffold overlap). P5 increases the number of final candidates without materially changing their proximity to the enumerated fragment space. The effect is therefore quantitative rather than a shift into a distinct fragment-defined region.
 
 Controlled GRU P5, MolGPT, REINVENT and GP-MoLFormer are evaluated with the same frozen filter, but their architectures and pretraining corpora differ. These cross-model results provide context and do not isolate a causal architecture effect. The archived GP-MoLFormer benchmark contains only the 42-molecule experiment. An earlier draft quoted a 14.5% final-candidate yield from an exploratory 166-molecule run, but its raw generation archive was not retained and the result could not be re-evaluated under evaluator 2.1.1. It is therefore omitted from the frozen comparison.
 

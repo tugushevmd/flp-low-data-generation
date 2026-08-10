@@ -32,6 +32,8 @@ These tables are rebuilt by `python scripts/rebuild_release.py`.
 | `table_s13_main_group_element_composition.csv` | element composition of the selected main-group component |
 | `table_s14_p5_candidate_funnel.csv` | pooled P5 strict, novel and final-candidate yields |
 | `table_s15_fragment_library_proximity.csv` | P0/P5 final-candidate proximity to the rule-based library |
+| `table_s16_curated_reference_scope.csv` | B and Al/Si composition of the curated reference |
+| `table_s17_checkpoint_sensitivity.csv` | validation-selected and fixed-checkpoint generation effects |
 
 ## Figures
 

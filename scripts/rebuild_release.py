@@ -5,6 +5,12 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 
+print("\nEvaluating fixed-checkpoint generations")
+subprocess.run([
+    sys.executable,
+    ROOT / "scripts" / "evaluate_fixed_checkpoint_sensitivity.py",
+], cwd=ROOT, check=True)
+
 STEPS = [
     "analyze_corpus_composition.py",
     "analyze_statistical_evidence.py",

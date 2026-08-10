@@ -37,6 +37,8 @@
     "table_s13_main_group_element_composition.csv",
     "table_s14_p5_candidate_funnel.csv",
     "table_s15_fragment_library_proximity.csv",
+    "table_s16_curated_reference_scope.csv",
+    "table_s17_checkpoint_sensitivity.csv",
     "table_s1_corpus_composition.csv",
     "table_s2_composition_differences.csv",
     "table_s3_token_shifts.csv",

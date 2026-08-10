@@ -46,6 +46,17 @@ fixed = effects[
     & (effects["fraction"] == 100)
     & (effects["metric"] == "validation_bpc_fixed_8000")
 ].iloc[0]
+checkpoint_generation = pd.read_csv(
+    TABLES / "table_s17_checkpoint_sensitivity.csv"
+)
+selected_strict = checkpoint_generation[
+    (checkpoint_generation["checkpoint_rule"] == "validation BPC")
+    & (checkpoint_generation["metric"] == "strict_flp_yield")
+].iloc[0]
+fixed_strict = checkpoint_generation[
+    (checkpoint_generation["checkpoint_rule"] == "fixed 8000 exposures")
+    & (checkpoint_generation["metric"] == "strict_flp_yield")
+].iloc[0]
 
 rows = [
     ("FLP split", "train molecules", len(train), split_manifest["train_molecules"]),
@@ -62,6 +73,8 @@ rows = [
     ("Corpus balance", "maximum full-corpus SMD versus P0", composition["standardized_mean_difference"].abs().max(), 0.2),
     ("Checkpoint robustness", "P5-P0 BPC improvement, selected checkpoint", selected["mean_improvement"], None),
     ("Checkpoint robustness", "P5-P0 BPC improvement, fixed 8000 exposures", fixed["mean_improvement"], None),
+    ("Checkpoint robustness", "P5-P0 strict-yield improvement, selected checkpoint", selected_strict["mean_improvement"], None),
+    ("Checkpoint robustness", "P5-P0 strict-yield improvement, fixed 8000 exposures", fixed_strict["mean_improvement"], None),
 ]
 
 audit = pd.DataFrame(rows, columns=["section", "check", "value", "target_or_limit"])

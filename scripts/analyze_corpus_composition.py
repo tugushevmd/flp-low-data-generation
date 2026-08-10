@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from matplotlib.ticker import PercentFormatter
+from rdkit import Chem
 
 
 PRIORS = ["P0", "P0.1", "P1", "P5"]
@@ -82,6 +83,10 @@ def main():
     parser.add_argument(
         "--archive",
         default="data/controlled_priors/controlled_prior_corpora.zip",
+    )
+    parser.add_argument(
+        "--curated-reference",
+        default="data/flp_curation/reference_smiles_curated_v2.csv",
     )
     parser.add_argument("--table-dir", default="results/publication_tables")
     parser.add_argument("--figure-dir", default="figures")
@@ -190,6 +195,30 @@ def main():
     element_table = pd.DataFrame(element_rows)
     element_table.to_csv(
         table_dir / "table_s13_main_group_element_composition.csv",
+        index=False,
+    )
+
+    curated = pd.read_csv(args.curated_reference)
+    curated_elements = curated["canonical_smiles"].map(
+        lambda value: {
+            atom.GetSymbol()
+            for atom in Chem.MolFromSmiles(value).GetAtoms()
+        }
+    )
+    curated_rows = []
+    for label, condition in [
+        ("B-containing", lambda values: "B" in values),
+        ("non-B, Al-containing", lambda values: "B" not in values and "Al" in values),
+        ("non-B, Al- and Si-containing", lambda values: "B" not in values and {"Al", "Si"} <= values),
+    ]:
+        count = int(curated_elements.map(condition).sum())
+        curated_rows.append({
+            "group": label,
+            "molecules": count,
+            "fraction": count / len(curated),
+        })
+    pd.DataFrame(curated_rows).to_csv(
+        table_dir / "table_s16_curated_reference_scope.csv",
         index=False,
     )
 

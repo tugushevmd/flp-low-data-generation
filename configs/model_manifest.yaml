@@ -26,6 +26,12 @@ controlled_priors:
   confirmatory_seeds: [44, 55, 66]
   generation_seeds: [101, 202, 303]
   learning_curve_molecules: [42, 83, 166]
+  fixed_checkpoint_sensitivity:
+    checkpoint_exposures: 8000
+    training_molecules: 166
+    training_seeds: [11, 22, 33, 44, 55, 66]
+    generation_seeds: [101, 202, 303]
+    samples_per_generation_seed: 500
 
 external_models:
   GP-MoLFormer:
@@ -42,4 +48,3 @@ manual_validation:
   rejected: 4
   stratification: 12 per model and training fraction
   decision_file: results/manual_validation/review_results.csv
-
