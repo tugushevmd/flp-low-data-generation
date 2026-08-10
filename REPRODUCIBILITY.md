@@ -32,7 +32,7 @@ The pretraining source pool was filtered against all 299 curated reference struc
 
 Checkpoints are selected using validation BPC. Test-generation metrics and manual review decisions do not participate in checkpoint selection. The selected checkpoint varies across seeds. A fixed-8000-exposure sensitivity analysis gives nearly the same pooled P5-P0 BPC improvement as validation-based selection (`0.0193` versus `0.0187`).
 
-Generation was also repeated from checkpoints fixed in advance at 8,000 exposures. Strict FLP-like yield was 8.22% for P0 and 12.36% for P5, giving a paired difference of +4.13 percentage points (95% CI +2.29 to +5.97; P5 higher in 6/6 seeds). Validation-selected checkpoints gave +4.29 points. Final-candidate yield at the fixed checkpoint was 4.28% for P0 and 6.73% for P5.
+Generation was also repeated from checkpoints fixed in advance at 8,000 exposures. Strict FLP-like yield was 8.22% for P0 and 12.36% for P5, giving a paired difference of +4.13 percentage points (95% CI +2.29 to +5.97; P5 higher in 6/6 seeds). Validation-selected checkpoints gave +4.29 points. Relative to those selected checkpoints, fixing training at 8,000 exposures changed strict yield by 0.14 points for P0 and 0.28 points for P5, much less than the 4.13-4.29 point P5-P0 effect. Final-candidate yield at the fixed checkpoint was 4.28% for P0 and 6.73% for P5, a difference of +2.46 points (95% CI +1.01 to +3.90; 6/6 paired wins).
 
 The frozen-prior FLP BPC gap is the difference between FLP and general-domain BPC before adaptation. The post-fine-tuning value above is P0 minus P5 raw FLP validation BPC after adaptation. Fine-tuning largely closes the likelihood difference between the priors, but their generation yields remain different; the two quantities describe different stages of the experiment.
 
@@ -65,7 +65,7 @@ P0.1 was evaluated at the frozen-prior stage but was not included in FLP fine-tu
 
 The external-model audit used a fresh stratified sample of 72 final candidates: 12 structures per model and training fraction. The reviewer was shown structure identifiers without model labels. Four structures were rejected. This first audit had one reviewer and no negative controls.
 
-A second panel mixes 24 model candidates with 21 chemically valid, filter-derived decoys. The structures were randomly ordered and labelled only with blind identifiers. All 24 model candidates were accepted; 13 of 21 decoys were rejected. Three accepted decoys were Al/Si-only systems outside the B-centered study scope. Restricted to the 18 within-scope decoys, 13 were rejected. These are operational panel metrics because filter-derived decoys are not an absolute chemical ground truth. A second reviewer would still be needed to estimate inter-rater agreement.
+A second panel mixes 24 model candidates with 21 chemically valid, filter-derived decoys. The structures were randomly ordered and labelled only with blind identifiers. All 24 model candidates were accepted; 13 of 21 decoys were rejected. Three accepted decoys were Al/Si-only systems outside the B-centered study scope. Their acceptance was chemically reasonable and is consistent with a reviewer applying broader FLP chemistry rather than mechanically reproducing the B-centered endpoint. Within the primary scope, 13 of 18 decoys were rejected. These are operational panel metrics because filter-derived decoys are not an absolute chemical ground truth. A second reviewer would still be needed to estimate inter-rater agreement.
 
 ## Baselines and external models
 
