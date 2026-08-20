@@ -10,8 +10,8 @@ from scipy.stats import binomtest, rankdata, t
 
 
 COHORTS = {
-    "discovery": [11, 22, 33],
-    "confirmatory": [44, 55, 66],
+    "initial": [11, 22, 33],
+    "additional": [44, 55, 66],
     "pooled": [11, 22, 33, 44, 55, 66],
 }
 METRICS = [
@@ -22,19 +22,21 @@ METRICS = [
 ]
 PRIMARY_METRIC = "strict_flp_yield"
 COLORS = {
-    "discovery": "#356859",
-    "confirmatory": "#963F52",
+    "initial": "#356859",
+    "additional": "#963F52",
     "pooled": "#7663A5",
 }
 
 
-def exact_sign_flip(values):
+def exact_sign_flip(values, two_sided=False):
     observed = np.mean(values)
-    statistics = [
+    statistics = np.array([
         np.mean(values * np.array(signs))
         for signs in itertools.product([-1, 1], repeat=len(values))
-    ]
-    return np.mean(np.array(statistics) >= observed - 1e-12)
+    ])
+    if two_sided:
+        return np.mean(np.abs(statistics) >= abs(observed) - 1e-12)
+    return np.mean(statistics >= observed - 1e-12)
 
 
 def paired_summary(table, metric, fraction, cohort, seeds):
@@ -54,6 +56,14 @@ def paired_summary(table, metric, fraction, cohort, seeds):
     half_width = t.ppf(0.975, n - 1) * standard_error
     nonzero = improvement[improvement != 0]
     wins = int((nonzero > 0).sum())
+    pooled = cohort == "pooled"
+    one_sided_sign = binomtest(
+        wins,
+        len(nonzero),
+        p=0.5,
+        alternative="greater",
+    ).pvalue
+    one_sided_flip = exact_sign_flip(improvement.to_numpy())
 
     return {
         "cohort": cohort,
@@ -69,13 +79,21 @@ def paired_summary(table, metric, fraction, cohort, seeds):
         "improvement_ci_low": improvement.mean() - half_width,
         "improvement_ci_high": improvement.mean() + half_width,
         "positive_pairs": wins,
-        "sign_test_p": binomtest(
+        "directional_sign_test_p_one_sided": one_sided_sign,
+        "directional_sign_flip_p_one_sided": one_sided_flip,
+        "reported_sign_test_p": binomtest(
             wins,
             len(nonzero),
             p=0.5,
-            alternative="greater",
+            alternative="two-sided" if pooled else "greater",
         ).pvalue,
-        "sign_flip_mean_p": exact_sign_flip(improvement.to_numpy()),
+        "reported_sign_flip_p": exact_sign_flip(
+            improvement.to_numpy(),
+            two_sided=pooled,
+        ),
+        "reported_test_sidedness": (
+            "two-sided" if pooled else "one-sided directional diagnostic"
+        ),
     }
 
 
@@ -99,7 +117,7 @@ def exact_page_test(values):
 def page_row(table, metric, fraction, families, increasing=True):
     part = table[
         (table["fraction"] == fraction)
-        & (table["training_seed"].isin(COHORTS["discovery"]))
+        & (table["training_seed"].isin(COHORTS["initial"]))
         & (table["family"].isin(families))
     ]
     matrix = part.pivot(
@@ -220,7 +238,10 @@ def main():
             row["checkpoint_rule"] = rule
             checkpoint_rows.append(row)
     checkpoint_effects = pd.DataFrame(checkpoint_rows)
-    checkpoint_effects.to_csv(
+    checkpoint_effects.drop(columns=[
+        "directional_sign_test_p_one_sided",
+        "directional_sign_flip_p_one_sided",
+    ]).to_csv(
         table_dir / "table_s17_checkpoint_sensitivity.csv",
         index=False,
     )
@@ -274,11 +295,11 @@ def main():
 
     checkpoints = pd.concat([
         pd.read_csv(result_dir / "controlled_prior_learning_curves/best_runs.csv").assign(
-            cohort="discovery"
+            cohort="initial"
         ),
         pd.read_csv(result_dir / "controlled_prior_confirmatory/combined_validation_bpc.csv")
         .query("training_seed in [44, 55, 66]")
-        .assign(cohort="confirmatory"),
+        .assign(cohort="additional"),
     ], ignore_index=True)
     checkpoint_summary = (
         checkpoints.groupby(["cohort", "family", "fraction"])
@@ -313,10 +334,7 @@ def main():
         (effects["metric"] == PRIMARY_METRIC)
         & (effects["fraction"] == 100)
     ].copy()
-    forest["display_cohort"] = forest["cohort"].replace({
-        "discovery": "initial",
-        "confirmatory": "additional",
-    })
+    forest["display_cohort"] = forest["cohort"]
     y = np.arange(len(forest))
     axes[0].errorbar(
         forest["mean_improvement"] * 100,

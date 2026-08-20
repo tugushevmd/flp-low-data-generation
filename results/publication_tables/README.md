@@ -8,7 +8,7 @@ These tables are rebuilt by `python scripts/rebuild_release.py`.
 |---|---|
 | `table_1_prior_compatibility_v211.csv` | frozen-prior compatibility and FLP BPC gap |
 | `table_2_learning_curves_v211.csv` | controlled GRU learning curves |
-| `table_3_confirmatory_effects_v211.csv` | paired P5 versus P0 effects across additional seeds |
+| `table_3_confirmatory_effects_v211.csv` | pooled paired P5 versus P0 effects across six seeds |
 | `table_4_external_generators_v211.csv` | controlled GRU and external-model context |
 | `table_5_manual_validation_v211.csv` | blinded B-centered candidate-plus-decoy review |
 | `representative_candidates_v211.csv` | accepted illustrative examples displayed in Figure 6; selected for clear 2D depiction and not used in metric calculation |
@@ -43,3 +43,5 @@ model context, candidate-plus-decoy validation and representative structures.
 Supplementary figures cover corpus composition, statistical evidence, baseline
 context, decoy-class outcomes and fragment-library proximity. PNG files are intended for quick inspection;
 PDF or SVG files are the publication versions.
+
+Three-seed cohort tables retain one-sided directional tests as descriptive diagnostics. Pooled six-seed tests are reported two-sided because the direction was not preregistered. The column names distinguish the diagnostic and reported values.

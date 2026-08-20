@@ -385,7 +385,20 @@ bpc_means = bpc_means.rename(columns={"mean": "validation_bpc_mean", "std": "val
 curve_table.merge(bpc_means, on=["family", "fraction"]).to_csv(
     TABLE_DIR / "table_2_learning_curves_v211.csv", index=False)
 
-sign_tests.to_csv(TABLE_DIR / "table_3_confirmatory_effects_v211.csv", index=False)
+publication_sign_tests = sign_tests.rename(columns={
+    "one_sided_sign_test_p": "directional_sign_test_p_one_sided",
+})
+publication_sign_tests["reported_sign_test_p_two_sided"] = np.minimum(
+    1,
+    2 * publication_sign_tests["directional_sign_test_p_one_sided"],
+)
+publication_sign_tests = publication_sign_tests.drop(
+    columns="directional_sign_test_p_one_sided"
+)
+publication_sign_tests.to_csv(
+    TABLE_DIR / "table_3_confirmatory_effects_v211.csv",
+    index=False,
+)
 external_columns = [
     "validity",
     "unique_valid_yield",

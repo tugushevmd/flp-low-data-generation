@@ -8,7 +8,7 @@ The primary endpoint is restricted to boron-centered FLP-like molecules. A quali
 
 Each model is trained independently for every training seed. Three generation seeds are sampled from each trained checkpoint and averaged before comparisons. Generation seeds are therefore repeated measurements, not independent replicates.
 
-The primary controlled learning curves contain three training seeds (`11`, `22`, `33`). The confirmatory P5 versus P0 experiment adds three new seeds (`44`, `55`, `66`) and reports paired results across all six seeds.
+The primary controlled learning curves contain three training seeds (`11`, `22`, `33`). A later P5 versus P0 run adds three new seeds (`44`, `55`, `66`) and reports paired results across all six seeds.
 
 ## Data split
 
@@ -55,7 +55,9 @@ For pooled P5 runs at the 166-molecule training size, mean yield is 12.64% at th
 
 Strict FLP-like yield is the primary generation metric; validity and final-candidate yield are secondary descriptive metrics. P5 and P0 are compared within the same training seeds.
 
-Seeds 11, 22 and 33 form the discovery cohort. Seeds 44, 55 and 66 form the independent confirmatory cohort. Results are reported separately for both cohorts, with the pooled six-seed analysis used only as supporting evidence. Mean paired effects are accompanied by t-based 95% confidence intervals, exact sign-flip tests and sign tests. The sign test reaches its minimum possible one-sided value of 0.125 (`1/8`) in each three-seed cohort and 0.0156 (`1/64`) after pooling. Effect sizes and confidence intervals carry the quantitative interpretation.
+Seeds 11, 22 and 33 form the initial cohort. Seeds 44, 55 and 66 form the additional cohort. Results are reported separately for both cohorts, with the pooled six-seed analysis used as supporting seed replication rather than an independent confirmation. Mean paired effects are accompanied by t-based 95% confidence intervals, exact sign-flip tests and sign tests.
+
+The three-seed rows retain directional one-sided tests as descriptive diagnostics; their minimum attainable sign-test value is 0.125 (`1/8`). The direction of the pooled comparison was not preregistered, so the pooled six-seed sign and sign-flip tests are reported two-sided. Six positive pairs give a two-sided sign-test value of 0.0313 (`2/64`). Effect sizes and confidence intervals carry the quantitative interpretation.
 
 The four-level frozen-prior dose response is tested with an exact blocked Page-style permutation test over all 13,824 within-seed label permutations. Its `p = 7.23e-5` is the minimum attainable value (`1/13,824`). Fine-tuning trends are analysed separately for each FLP training-set size. At the 166-molecule size, the three-level P0 < P1 < P5 strict-yield result also reaches its permutation floor, `p = 0.00463` (`1/216`).
 
