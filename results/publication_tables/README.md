@@ -44,4 +44,4 @@ Supplementary figures cover corpus composition, statistical evidence, baseline
 context, decoy-class outcomes and fragment-library proximity. PNG files are intended for quick inspection;
 PDF or SVG files are the publication versions.
 
-Three-seed cohort tables retain one-sided directional tests as descriptive diagnostics. Pooled six-seed tests are reported two-sided because the direction was not preregistered. The column names distinguish the diagnostic and reported values.
+Three-seed cohort tests are one-sided directional diagnostics. Pooled six-seed tests are reported two-sided because the direction was not preregistered. The `reported_test_sidedness` column identifies which convention is used in each row.

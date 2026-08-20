@@ -145,12 +145,12 @@ def page_row(table, metric, fraction, families, increasing=True):
     }
 
 
-def read_fixed_step_bpc(learning_archive, confirmatory_archive):
+def read_fixed_step_bpc(learning_archive, additional_archive):
     with ZipFile(learning_archive) as archive:
-        discovery = pd.read_csv(archive.open("training_history.csv"))
-    with ZipFile(confirmatory_archive) as archive:
-        confirmatory = pd.read_csv(archive.open("fine_tuning_history.csv"))
-    history = pd.concat([discovery, confirmatory], ignore_index=True)
+        initial = pd.read_csv(archive.open("training_history.csv"))
+    with ZipFile(additional_archive) as archive:
+        additional = pd.read_csv(archive.open("fine_tuning_history.csv"))
+    history = pd.concat([initial, additional], ignore_index=True)
     history = history[
         (history["step"] == 125)
         & (history["family"].isin(["P0", "P5"]))
@@ -209,7 +209,10 @@ def main():
             ))
 
     effects = pd.DataFrame(effect_rows)
-    effects.to_csv(
+    effects.drop(columns=[
+        "directional_sign_test_p_one_sided",
+        "directional_sign_flip_p_one_sided",
+    ]).to_csv(
         table_dir / "table_s4_discovery_confirmatory_effects.csv",
         index=False,
     )
@@ -267,23 +270,23 @@ def main():
         "exact_one_sided_p": frozen_p,
     }]
 
-    discovery = pd.read_csv(
+    initial = pd.read_csv(
         result_dir / "controlled_prior_learning_curves/training_seed_summary_v2.csv"
     )
-    discovery_bpc = pd.read_csv(
+    initial_bpc = pd.read_csv(
         result_dir / "controlled_prior_learning_curves/best_runs.csv"
     )[["family", "fraction", "training_seed", "best_validation_bpc"]].rename(
         columns={"best_validation_bpc": "validation_bpc"}
     )
-    discovery = discovery.merge(
-        discovery_bpc,
+    initial = initial.merge(
+        initial_bpc,
         on=["family", "fraction", "training_seed"],
         how="left",
     )
     for fraction in [25, 50, 100]:
         for metric in METRICS:
             trend_rows.append(page_row(
-                discovery,
+                initial,
                 metric,
                 fraction,
                 ["P0", "P1", "P5"],

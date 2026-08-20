@@ -23,7 +23,7 @@ controlled_priors:
     P1: 0.01
     P5: 0.05
   training_seeds: [11, 22, 33]
-  confirmatory_seeds: [44, 55, 66]
+  additional_seeds: [44, 55, 66]
   generation_seeds: [101, 202, 303]
   learning_curve_molecules: [42, 83, 166]
   fixed_checkpoint_sensitivity:
