@@ -18,9 +18,9 @@ P0.1 is part of the frozen-prior analysis only. The generation-level dose experi
 - The 7,500 selected main-group molecules in P5 contain B in `40.1%`, P in `40.4%`, N in `49.9%`, Si in `11.3%`, Al in `5.0%` and Ge in `5.0%`; `12.5%` contain B together with P or N.
 - Of the 299 curated reference structures, 285 (`95.3%`) contain B. The remaining 14 are Al-containing systems, including two that also contain Si.
 - With 166 FLP molecules, strict FLP-like yield rises from `8.36 +/- 0.95%` for P0 to `12.64 +/- 1.29%` for P5 across six paired seeds.
-- The discovery and confirmatory cohorts both favour P5 in 3/3 seeds. Their mean strict-yield changes are `+4.04` and `+4.53` percentage points, respectively. The pooled estimate is `+4.29` points (95% CI `+2.61` to `+5.97`).
+- The initial and additional seed cohorts both favour P5 in 3/3 seeds. Their mean strict-yield changes are `+4.04` and `+4.53` percentage points, respectively. The pooled estimate is `+4.29` points (95% CI `+2.61` to `+5.97`).
 - With the checkpoint fixed in advance at 8,000 exposures, strict yield is `8.22%` for P0 and `12.36%` for P5. The paired effect is `+4.13` points (95% CI `+2.29` to `+5.97`), with P5 ahead in all six seeds.
-- The exact one-sided sign test is `p = 0.125` within each three-seed cohort and `p = 0.0156` in the pooled six-seed analysis. The pooled result is reported as supporting evidence, not as a second confirmatory test.
+- The exact one-sided sign test is `p = 0.125` within each three-seed cohort. Because the pooled direction was not preregistered, the six-of-six pooled result is reported with a two-sided sign-test value of `p = 0.0313` and treated as supporting seed replication rather than an independent confirmation.
 - For P5, `12.64%` strict FLP-like yield becomes `10.93%` after reference-set novelty filtering and `7.07%` after the similarity window and remaining final-candidate filters.
 - At 166 molecules, final-candidate yield is `7.1%` for controlled GRU P5, `20.7%` for MolGPT and `29.6%` for REINVENT. The archived GP-MoLFormer benchmark contains only the 42-molecule experiment, where its yield is `4.5%`. An earlier draft quoted `14.5%` from an unarchived exploratory 166-molecule run; that value is not included in the frozen comparison.
 - A data-matched character 5-gram baseline produces no final candidates. The rule-based fragment recombination library gives `50.3%` candidates outside the curated seed set, but template-relative final novelty is zero because the library itself is used as the template reference.
@@ -104,7 +104,7 @@ PyTorch should be installed for the CUDA version available on the machine. Colab
 
 ## Reproducibility notes
 
-- Training seeds: `11, 22, 33`; confirmatory seeds: `44, 55, 66`.
+- Initial training seeds: `11, 22, 33`; additional seeds: `44, 55, 66`.
 - Generation seeds: `101, 202, 303`.
 - Generation seeds are averaged within each training run. The training seed is the unit of replication.
 - The evaluator was frozen at version `2.1.1` before the final recalculation.

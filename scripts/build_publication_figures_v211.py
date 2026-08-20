@@ -175,7 +175,7 @@ fig.tight_layout()
 save_figure(fig, "figure_2_controlled_prior_learning_curves")
 
 
-# 3. Confirmatory paired experiment: P5 versus P0
+# 3. Paired seed replication: P5 versus P0
 deltas = pd.read_csv(DATA / "controlled_prior_confirmatory" / "paired_deltas_p5_vs_p0.csv")
 sign_tests = pd.read_csv(DATA / "controlled_prior_confirmatory" / "paired_sign_tests.csv")
 
@@ -212,7 +212,7 @@ fig.legend([
     plt.Line2D([], [], marker="D", linestyle="", color=COLORS["wine"], markersize=6),
 ], ["individual training seed", "mean"], loc="upper center", ncol=2,
    bbox_to_anchor=(0.5, 1.01))
-fig.suptitle("Confirmatory experiment: paired effect of P5 versus P0",
+fig.suptitle("Paired P5 versus P0 effects across training seeds",
              fontsize=14, fontweight="semibold", y=1.07)
 fig.tight_layout()
 save_figure(fig, "figure_3_confirmatory_paired_effects")
@@ -246,6 +246,7 @@ external_metrics = [
 
 fig, axes = plt.subplots(1, 3, figsize=(12.2, 3.9))
 for ax, (metric, title), letter in zip(axes, external_metrics, "ABC"):
+    offsets = dict(zip(MODEL_COLORS, np.linspace(-0.24, 0.24, len(MODEL_COLORS))))
     for model in MODEL_COLORS:
         color = MODEL_COLORS[model]
         if model == "Controlled GRU P5":
@@ -257,20 +258,21 @@ for ax, (metric, title), letter in zip(axes, external_metrics, "ABC"):
 
         model_data = model_seeds[model_seeds["model"] == model]
         means = model_data.groupby("fraction")[metric].mean().reindex([25, 100])
-        x = np.array([0, 42, 166])
+        x = np.arange(3, dtype=float) + offsets[model]
         y = np.array([zero_mean, means.loc[25], means.loc[100]], dtype=float)
         present = np.isfinite(y)
-        ax.plot(x[present], y[present], color=color, linewidth=2.1,
-                marker="o", markersize=5, label=model)
-        ax.scatter([0], [zero_mean], s=70, facecolor="white",
+        ax.scatter(x[present], y[present], color=color, s=56,
+                   edgecolor="white", linewidth=0.7, label=model, zorder=4)
+        ax.scatter([x[0]], [zero_mean], s=76, facecolor="white",
                    edgecolor=color, linewidth=1.8, zorder=4)
         for fraction in [25, 100]:
             values = model_data.loc[model_data["fraction"] == fraction, metric]
-            x_value = molecules[fraction]
-            ax.scatter(np.full(len(values), x_value), values, color=color,
+            x_value = {25: 1, 100: 2}[fraction] + offsets[model]
+            seed_jitter = np.linspace(-0.035, 0.035, len(values))
+            ax.scatter(x_value + seed_jitter, values, color=color,
                        alpha=0.42, s=26, edgecolor="white", linewidth=0.4, zorder=3)
     ax.set_title(title)
-    ax.set_xticks([0, 42, 166], ["zero-shot", "42\n(25%)", "166\n(100%)"])
+    ax.set_xticks([0, 1, 2], ["zero-shot", "42\n(25%)", "166\n(100%)"])
     ax.set_xlabel("FLP molecules used for fine-tuning")
     finish_axis(ax, percent=True)
     panel_letter(ax, letter)
@@ -330,10 +332,10 @@ save_figure(fig, "figure_5_manual_chemical_validation")
 # 6. Representative structures from the blinded review
 review = pd.read_csv(review_dir / "review_results.csv")
 accepted = review[review["decision"] == "accept"]
-examples = (accepted.sort_values("review_id")
-            .groupby(["model", "fraction"], sort=False)
-            .head(2)
-            .sort_values(["model", "fraction", "review_id"]))
+representative_ids = ["E007", "E021", "E014", "E024", "E030", "E017"]
+examples = (accepted.set_index("review_id")
+            .loc[representative_ids]
+            .reset_index())
 
 mols = [Chem.MolFromSmiles(smiles) for smiles in examples["canonical_smiles"]]
 legends = [
@@ -342,16 +344,16 @@ legends = [
 ]
 grid = Draw.MolsToGridImage(
     mols,
-    molsPerRow=4,
-    subImgSize=(360, 285),
+    molsPerRow=3,
+    subImgSize=(520, 390),
     legends=legends,
     useSVG=False,
 )
 grid.save(FIGURE_DIR / "figure_6_representative_candidates.png")
 svg = Draw.MolsToGridImage(
     mols,
-    molsPerRow=4,
-    subImgSize=(360, 285),
+    molsPerRow=3,
+    subImgSize=(520, 390),
     legends=legends,
     useSVG=True,
 )
@@ -413,7 +415,7 @@ examples.to_csv(TABLE_DIR / "representative_candidates_v211.csv", index=False)
 
 manifest = {
     "evaluator_version": "2.1.1",
-    "figures": sorted(path.name for path in FIGURE_DIR.iterdir()),
+    "figures": sorted(path.name for path in FIGURE_DIR.iterdir() if path.is_file()),
     "tables": sorted(path.name for path in TABLE_DIR.glob("*.csv")),
     "manual_validation": {
         "initial_candidate_review": {

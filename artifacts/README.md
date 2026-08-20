@@ -1,5 +1,9 @@
 # Large artifacts
 
+`external_generations/` contains compact raw-generation archives and exact source
+hashes for the external-model comparisons. TensorBoard event logs and model weights
+are excluded from these compact archives.
+
 Model weights and large external raw runs are not tracked by Git. Put downloaded files in `artifacts/raw/` when a full recalculation is needed.
 
 ## Controlled-model weights

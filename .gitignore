@@ -14,6 +14,8 @@ models/
 
 artifacts/*
 !artifacts/README.md
+!artifacts/external_generations/
+!artifacts/external_generations/**
 
 results/recomputed/
 tmp/
@@ -21,4 +23,3 @@ logs/
 
 .DS_Store
 Thumbs.db
-

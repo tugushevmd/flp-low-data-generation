@@ -312,7 +312,11 @@ def main():
     forest = effects[
         (effects["metric"] == PRIMARY_METRIC)
         & (effects["fraction"] == 100)
-    ]
+    ].copy()
+    forest["display_cohort"] = forest["cohort"].replace({
+        "discovery": "initial",
+        "confirmatory": "additional",
+    })
     y = np.arange(len(forest))
     axes[0].errorbar(
         forest["mean_improvement"] * 100,
@@ -326,7 +330,7 @@ def main():
         color="#963F52",
     )
     axes[0].axvline(0, color="#686D70", linestyle="--", linewidth=1)
-    axes[0].set_yticks(y, forest["cohort"])
+    axes[0].set_yticks(y, forest["display_cohort"])
     axes[0].set_xlabel("P5 - P0, percentage points")
     axes[0].set_title("Primary outcome at 166 molecules")
 

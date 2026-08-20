@@ -1,0 +1,9 @@
+{
+  "records": 299,
+  "parse_ok": 299,
+  "canonical_roundtrip_ok": 299,
+  "canonical_match": 299,
+  "single_component": 299,
+  "neutral": 299,
+  "without_radicals": 299
+}
